@@ -145,7 +145,6 @@ class PokedexSearch < PokedexAll
 		return favorites
 	end
 
-
 	def favorites
 		return self.search_for_favorites
 	end
@@ -258,6 +257,8 @@ class PokeapiEvolutions
 	end
 end
 
+
+
 # new_pokemon = Pokemon.new("Ninetales", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
 # pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
 
@@ -270,31 +271,7 @@ end
 # puts search_results.favorites
 
 
-@name = "oddish"
-@pokemon = HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{@name}")
 
-
-# Use for height and weight and types
-api_data = Pokeapi.new(@pokemon)
-
-species = HTTParty.get(api_data.species_url)
-# Use for evolution id basically
-api_species = PokeapiSpecies.new(species)
-
-evolutions = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{api_species.evolution_id}")
-# Use for evolutions
-api_evolution = PokeapiEvolutions.new(evolutions)
-
-height = api_data.height
-weight = api_data.weight
-stage1 = api_evolution.stage1.capitalize
-stage2 = api_evolution.stage2.capitalize
-stage3 = api_evolution.stage3.capitalize
-types = api_data.types
-new_pokemon = Pokemon.new(@name.capitalize, height, weight, "Male", 34, 59, "on", stage1, stage2, stage3, types)
-pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
-pokedex.save_pokemon
-puts new_pokemon.traits
 
 
 

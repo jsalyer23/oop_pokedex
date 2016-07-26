@@ -1,7 +1,7 @@
 MyApp.get "/" do
 	@title = "Personal Pok&eacute;dex"
 
-	@file = "models/pokedex.csv"
+	@file = "/models/pokedex.csv"
 	@all_pokemon = PokedexAll.new(@file)
 	@favorites = PokedexSearch.new("", @all_pokemon)
 	@random_favorite = @favorites.favorite.sample
