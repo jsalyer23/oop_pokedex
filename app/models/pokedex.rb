@@ -2,8 +2,12 @@ require "httparty"
 require "pry"
 require "json"
 
-class Pokemon
+# This class takes in data about a Pokemon, creating a new Pokemon for the Pokedex
 
+class Pokemon
+	# name, cp, hp, favorite, and gender are entered by the user
+	#
+	# height, weight, stages, and types come from the API request
 	def initialize(name, height, weight, gender, cp, hp, favorite, stage1, stage2, stage3, type)
 		@name = name
 		@height = height
@@ -18,68 +22,40 @@ class Pokemon
 		@stage3 = stage3
 	end
 
-	def name
-		@name
-	end
-
-	def height
-		@height
-	end
-
-	def weight
-		@weight
-	end
-
-	def gender
-		@gender
-	end
-
+	# Converts Array into String
+	#
+	# RETURNS STRING
 	def type
 		@type.join(",")
 	end
 
-	def cp
-		@cp
-	end
-
-	def hp
-		@hp
-	end
-
-	def favorite
-		@favorite
-	end
-
-	def stage1
-		@stage1
-	end
-
-	def stage2
-		@stage2
-	end
-
-	def stage3
-		@stage3
-	end
-
+	# Adds all traits to Array
+	#
+	# RETURNS ARRAY
 	def traits
 		pokemon = []
-		pokemon.push(self.name, self.height, self.weight, self.gender,
-			self.cp, self.hp, self.favorite, self.stage1,
-			self.stage2, self.stage3, self.type)
+		pokemon.push(@name, @height, @weight, @gender,
+			@cp, @hp, @favorite, @stage1,
+			@stage2, @stage3, self.type)
 		return pokemon
 	end
 
 end
 
+# This class saves new Pokemon to flat storage
 class PokedexSave < Pokemon
 
+	# pokemon = Array returned from Pokemon.traits
+	# file = File to save to
 	def initialize(pokemon, file)
 		@pokemon = pokemon.traits
 		@file = file
 		
 	end
 
+	# Save Pokemon to flat file
+	#
+	# SAVES DATA
 	def save_pokemon
 		require "csv"
 		CSV.open(@file, "a") do |csv|
@@ -88,12 +64,17 @@ class PokedexSave < Pokemon
 	end
 end
 
+# This class retrieves all Pokemon from flat file
 class PokedexAll
 
+	# file = Pokedex file (flat storage)
 	def initialize(file)
 		@file = file
 	end
 
+	# Adds all Pokemon from Pokedex into an Array
+	# 
+	# RETURNS ARRAY
 	def all_pokemon
 		require "csv"
 		pokemon_array= []
@@ -103,19 +84,28 @@ class PokedexAll
 		return pokemon_array
 	end
 
+	# Returns all Pokemon
+	#
+	# RETURNS ARRAY
 	def pokemon_array
 		return self.all_pokemon
 	end
 
 end
 
+# This class searches all Pokemon from Pokedex
 class PokedexSearch < PokedexAll
 
+	# input = search input
+	# pokemon = Array of all Pokemon in Pokedex
 	def initialize(input, pokemon)
 		@input = input
 		@all_pokemon = pokemon.pokemon_array
 	end
 
+	# Searches for any matching trait
+	# 
+	# RETURNS ARRAY
 	def search_all
 		results_array = []
 		found = "no"
@@ -130,6 +120,9 @@ class PokedexSearch < PokedexAll
 		return results_array
 	end
 
+	# Searches for specific name
+	#
+	# RETURNS STRING OR FALSE
 	def search_by_name
 		@all_pokemon.each do |pokemon|
 			if @input.capitalize == pokemon[0]
@@ -139,6 +132,9 @@ class PokedexSearch < PokedexAll
 		return false
 	end
 
+	# Adds favorited Pokemon to Array
+	#
+	# RETURNS ARRAY
 	def search_for_favorites
 		favorites = []
 		@all_pokemon.each do |pokemon|
@@ -149,6 +145,7 @@ class PokedexSearch < PokedexAll
 		return favorites
 	end
 
+	
 	def favorites
 		return self.search_for_favorites
 	end
