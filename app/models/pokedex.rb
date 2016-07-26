@@ -140,7 +140,17 @@ class PokedexSearch < PokedexAll
 	end
 
 	def search_for_favorites
-		
+		favorites = []
+		@all_pokemon.each do |pokemon|
+			if pokemon[6] == "yes"
+				favorites.push(pokemon)
+			end
+		end
+		return favorites
+	end
+
+	def favorites
+		return self.search_for_favorites
 	end
 
 	def all_results
@@ -153,7 +163,7 @@ class PokedexSearch < PokedexAll
 
 end
 
-new_pokemon = Pokemon.new("Vulpix", 45, 100, "female", 67, 22, "yes", "Vulpix", "Ninetales", "", ["fire", "normal"])
+new_pokemon = Pokemon.new("Ninetales", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
 pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
 
 pokedex.save_pokemon
@@ -162,7 +172,7 @@ pokemon = PokedexAll.new("pokedex.csv")
 
 search_results = PokedexSearch.new("Vulpix", pokemon)
 
-puts search_results.name_results
+puts search_results.favorites
 
 
 
