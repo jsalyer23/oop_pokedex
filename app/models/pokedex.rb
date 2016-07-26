@@ -164,21 +164,10 @@ class Pokeapi
 
 	def initialize(api_request)
 		@api = api_request
-		
 	end
 
 	def species_url
 		@api["species"]["url"]
-	end
-
-	def evolution_url
-		@species["evolution_chain"]["url"]
-	end
-
-	def evolution_id
-		species2 = self.evolution_url.split("n/")
-		id = species2[1].split("/")
-		return id.join("")
 	end
 
 	def id
@@ -202,35 +191,64 @@ class Pokeapi
 	end
 
 	def height
-		@api["height"]
+		return @api["height"]
 	end
 
 	def weight
-		@api["weight"]
+		return @api["weight"]
+	end
+
+
+
+
+
+end
+
+class PokeapiSpecies
+
+	def initialize(species_request)
+		@api_species = species_request
+	end
+
+	def evolution_url
+		@api_species["evolution_chain"]["url"]
+	end
+
+	def evolution_id
+		species2 = self.evolution_url.split("n/")
+		id = species2[1].split("/")
+		return id.join("")
+	end
+end
+
+class PokeapiEvolutions
+
+	def initialize(evolution_request)
+		@api_evolution = evolution_request
 	end
 
 	def stage1
-		return @api["chain"]["species"]["name"]
+		return @api_evolution["chain"]["species"]["name"]
 	end
 
 	def stage2
-		if @api["chain"]["evolves_to"][0] == nil ||
-			@api["chain"]["evolves_to"][0]["species"] == nil ||
-			@api["chain"]["evolves_to"][0]["species"]["name"] == nil
+		if @api_evolution["chain"]["evolves_to"][0] == nil ||
+			@api_evolution["chain"]["evolves_to"][0]["species"] == nil ||
+			@api_evolution["chain"]["evolves_to"][0]["species"]["name"] == nil
 			return "None"
 		else
-			return @api["chain"]["evolves_to"][0]["species"]["name"]
+			return @api_evolution["chain"]["evolves_to"][0]["species"]["name"]
 		end
 	end
 
 	def stage3
-		if @api["chain"]["evolves_to"][0] == nil ||
-			@api["chain"]["evolves_to"][0]["evolves_to"][0] == nil ||
-			@api["chain"]["evolves_to"][0]["evolves_to"][0]["species"] == nil ||
-			@api["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"] == nil
+		if @api_evolution["chain"]["evolves_to"][0] == nil ||
+			@api_evolution["chain"]["evolves_to"][0]["evolves_to"][0] == nil ||
+			@api_evolution["chain"]["evolves_to"][0]["evolves_to"][0]["species"] == nil ||
+			@api_evolution["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"] == nil
 			return "None"
 		else
-			return @api["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"]
+			return @api_evolution["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"]
 		end
 	end
 
@@ -238,9 +256,6 @@ class Pokeapi
 		evolutions = []
 		evolutions.push(self.stage1, self.stage2, self.stage3)
 	end
-
-
-
 end
 
 # new_pokemon = Pokemon.new("Ninetales", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
@@ -258,15 +273,27 @@ end
 @name = "oddish"
 @pokemon = HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{@name}")
 
+
+# Use for height and weight and types
 api_data = Pokeapi.new(@pokemon)
+
+species = HTTParty.get(api_data.species_url)
+# Use for evolution id basically
+api_species = PokeapiSpecies.new(species)
+
+evolutions = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{api_species.evolution_id}")
+# Use for evolutions
+api_evolution = PokeapiEvolutions.new(evolutions)
+
 height = api_data.height
 weight = api_data.weight
-
-
+stage1 = api_evolution.stage1.capitalize
+stage2 = api_evolution.stage2.capitalize
+stage3 = api_evolution.stage3.capitalize
 types = api_data.types
-new_pokemon = Pokemon.new(@name, height, weight, "Male", 34, 59, "on", "stage1", "stage2", "stage3", types)
-
-
+new_pokemon = Pokemon.new(@name.capitalize, height, weight, "Male", 34, 59, "on", stage1, stage2, stage3, types)
+pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
+pokedex.save_pokemon
 puts new_pokemon.traits
 
 
