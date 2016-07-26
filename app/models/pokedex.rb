@@ -145,7 +145,7 @@ class PokedexSearch < PokedexAll
 		return favorites
 	end
 
-	
+
 	def favorites
 		return self.search_for_favorites
 	end
@@ -160,21 +160,114 @@ class PokedexSearch < PokedexAll
 
 end
 
-new_pokemon = Pokemon.new("Ninetales", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
-pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
+class Pokeapi
 
-pokedex.save_pokemon
+	def initialize(api_request)
+		@api = api_request
+		
+	end
 
-pokemon = PokedexAll.new("pokedex.csv")
+	def species_url
+		@api["species"]["url"]
+	end
 
-search_results = PokedexSearch.new("Vulpix", pokemon)
+	def evolution_url
+		@species["evolution_chain"]["url"]
+	end
 
-puts search_results.favorites
+	def evolution_id
+		species2 = self.evolution_url.split("n/")
+		id = species2[1].split("/")
+		return id.join("")
+	end
+
+	def id
+		@api["id"]
+	end
+
+	def abilities
+		abilities = []
+		@api["abilities"].each do |i|
+			abilities.push(i["ability"]["name"])
+		end
+		return abilities
+	end
+
+	def types
+		types = []
+		@api["types"].each do |i|
+			types.push(i["type"]["name"].capitalize)
+		end
+		return types
+	end
+
+	def height
+		@api["height"]
+	end
+
+	def weight
+		@api["weight"]
+	end
+
+	def stage1
+		return @api["chain"]["species"]["name"]
+	end
+
+	def stage2
+		if @api["chain"]["evolves_to"][0] == nil ||
+			@api["chain"]["evolves_to"][0]["species"] == nil ||
+			@api["chain"]["evolves_to"][0]["species"]["name"] == nil
+			return "None"
+		else
+			return @api["chain"]["evolves_to"][0]["species"]["name"]
+		end
+	end
+
+	def stage3
+		if @api["chain"]["evolves_to"][0] == nil ||
+			@api["chain"]["evolves_to"][0]["evolves_to"][0] == nil ||
+			@api["chain"]["evolves_to"][0]["evolves_to"][0]["species"] == nil ||
+			@api["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"] == nil
+			return "None"
+		else
+			return @api["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"]
+		end
+	end
+
+	def evolutions
+		evolutions = []
+		evolutions.push(self.stage1, self.stage2, self.stage3)
+	end
 
 
 
+end
+
+# new_pokemon = Pokemon.new("Ninetales", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
+# pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
+
+# pokedex.save_pokemon
+
+# pokemon = PokedexAll.new("pokedex.csv")
+
+# search_results = PokedexSearch.new("Vulpix", pokemon)
+
+# puts search_results.favorites
 
 
+@name = "oddish"
+@pokemon = HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{@name}")
+
+api_data = Pokeapi.new(@pokemon)
+height = api_data.height
+weight = api_data.weight
+
+
+types = api_data.types
+new_pokemon = Pokemon.new(@name, height, weight, "Male", 34, 59, "on", "stage1", "stage2", "stage3", types)
+
+
+puts new_pokemon.traits
 
 
 
