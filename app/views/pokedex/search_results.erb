@@ -1,0 +1,117 @@
+<% @title="Search Results" %>
+
+<div class="header">
+	Search Results
+</div>
+<div class="searchResults">
+<% 
+if @search_results.count > 0  
+
+	@search_results.each do |record|
+
+		@height = record[1].to_f / 10 * 3.28
+		@height = @height.round(2)
+		@weight = record[2].to_i / 4.54
+		@weight = @weight.round(2)
+		
+
+	%>	
+	<div class="wrapper">
+	<img class="viewImage" src="/images2/<%= record[0] %>.png" />
+		
+		
+	<div class="statsContainer">
+			
+		<div class="stats">
+			<div class="stats__title">
+				Name:
+			</div>
+			<div class="stats__info">
+				<%= record[0] %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Height:
+			</div>
+			<div class="stats__info">
+				<%= @height %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Weight:
+			</div>
+			<div class="stats__info">
+				<%= @weight %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Gender:
+			</div>
+			<div class="stats__info">
+				<%= record[3] %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Type:
+			</div>
+			<div class="stats__info">
+				<%= Pokedex.pokedex_display_type(record) %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				CP:
+			</div>
+			<div class="stats__info">
+				<%= record[4] %>
+			</div>
+		</div>
+
+
+		<div class="stats">
+			<div class="stats__title">
+				HP:
+			</div>
+			<div class="stats__info">
+				<%= record[5] %>
+
+			</div>
+		</div>
+
+		<div class="stats">
+				<div class="stats__title">
+					Favorite:
+				</div>
+				<div class="stats__info">
+				<% if record[6] == "on" %>
+					<img class="favoriteHeart" src="/images2/heart.png" alt="Heart" />
+					<% else %>
+					<%= "no" %>
+					<% end %>
+				</div>
+		</div>
+
+	</div>
+
+	<div class="editText">
+		<a href="/view?name=<%= record[0] %>">View Individual Pok&eacute;mon</a>
+	</div>
+</div>
+<%	end 
+	
+else %>
+	<div class="searchError">
+		<%= @search_error %>
+	</div>
+<% 
+end  %>
+</div>

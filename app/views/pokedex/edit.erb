@@ -1,0 +1,49 @@
+<!-- This page is linked only from view.erb. Users will go to this page to edit data of a specific Pokemon of theirs. -->
+<script type="text/javascript" src="/js/formAutofocus.js"></script>
+<div class="header">
+	Edit Info
+</div>
+
+<!-- This form should autofill data from the previous page -->
+<div class="statsContainer">
+	<form action="/view">
+		<input type="hidden" name="name" value= <%= @name %> />
+		<div class="stats">
+			<div class="stats__title--fixedWidth">
+				Gender:
+			</div>
+			<div class="stats__info">
+				<input type="text" name="gender" class="form" value= <%=  @gender %> autofocus required="">
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title--fixedWidth">
+				CP:
+			</div>
+			<div class="stats__info">
+				<input type="text" name="cp" class="form" value= <%= @cp %> required="">
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title--fixedWidth">
+				HP:
+			</div>
+			<div class="stats__info">
+				<input type="text" name="hp" class="form" value= <%= @hp %> required="">
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title--fixedWidth">
+				Favorite:
+			</div>
+			<div class="stats__info">
+				<input type="checkbox" name="favorite" <%= @favorite %>>
+			</div>
+		</div>
+
+	<input type="submit" value="Submit">
+	</form>
+</div>

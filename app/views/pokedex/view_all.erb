@@ -1,0 +1,24 @@
+<!-- This page will display all Pokemon in a users collection as images in rows with the name underneath. Each image will be linked to the specific view page for that Pokemon, which contains specific details. -->
+<div class="header">
+	Your Pok&eacute;mon
+</div>
+<div>
+	<img src="<%= @bulbasaur %>" />
+</div>
+
+<div class="viewAllPokemon">
+<% if @all_pokemon.empty? == true %>
+
+	<div>
+		<%= @no_pokemon_error %>
+	</div>
+
+<% else %>
+	<% @all_pokemon.each do |pokemon| %>
+	<div class="viewAllPokemon__link">
+		<a href="/view?name=<%= pokemon[0] %>"><img class="pokemonImage" src="/images2/<%=pokemon[0] %>.png" /></a>
+	</div>
+
+	<% end %>
+<% end %>
+</div>

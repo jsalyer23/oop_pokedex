@@ -1,0 +1,105 @@
+<script type="text/javascript" src="/js/randomTimer.js"></script>
+
+<div class="header">
+	Personal Pok&eacute;dex
+</div>
+
+<% if @all_pokemon.empty? == true %>
+
+<div class="noPokemonError">
+	<%= @no_pokemon_error %>
+</div>
+
+<% else %>
+
+<div class="random">
+<img class="viewImage" src="/images2/<%= @random_favorite[0] %>.png" />
+
+	<div class="statsContainer">
+	
+		<div class="stats">
+			<div class="stats__title">
+				Name:
+			</div> 
+			<div class="stats__info">
+				<%= @name %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Height:
+			</div>
+			<div class="stats__info">
+				<%= @height %> ft
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Weight:
+			</div> 
+			<div class="stats__info">
+				<%= @weight %> lbs
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Gender:
+			</div>
+			<div class="stats__info">
+				<%= @gender %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Type:
+			</div>
+			<div class="stats__info">
+				<%= @type %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				CP:
+			</div>
+			<div class="stats__info">
+				<%= @cp %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				HP:
+			</div>
+			<div class="stats__info">
+				<%= @hp %>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stats__title">
+				Favorite:
+			</div>
+	<% if @favorite == "yes" %>
+
+		<div class="stats__info">
+			<img class="favoriteHeart" src="/images2/heart.png" alt="Heart" />
+		</div>
+
+	<% else %>
+
+		<div class="stats__info">
+			<%= @random_favorite[7] %>
+		</div>
+
+	<% end %>
+		</div>
+		
+	</div>
+</div>
+
+<% end %>

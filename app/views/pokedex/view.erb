@@ -1,0 +1,136 @@
+<!-- This page will display a user's Pokemon's specific details as they are stored in the database. From this page, a user will be able to get a page where they can edit these details. -->
+<script type="text/javascript" src="/js/toggleEvolution.js"></script>
+<div class="header">
+<!-- Name of Pokemon being viewed -->
+	<%= @name.capitalize %>
+</div>
+
+	<div>
+	<!-- Image of Pokemon being viewed -->
+		<img class="viewImage" src="/images2/<%= @name %>.png" />
+	</div>
+
+
+	<div class="evolutions">
+		<div class="evolutions__text">
+			Evolution Path
+		</div>
+		<div id="showText">
+			Show/Hide Evolutions
+		</div>
+		<div id="hideText">
+			Hide Evolutions
+		</div>
+	<% if @stage1.blank? == false %>
+		<div id="toggle">
+			<div class="evoWrapper">
+				<div class="evolutions__image">
+			<!-- Image of Pokemon being viewed -->
+				<img class="evoImage" src="/images2/<%= @stage1 %>.png" />
+				<div class="stage"><%= @stage1 %></div>
+				</div>
+
+	<% end 
+
+		if @stage2 != "None"  %>
+
+			<!-- Image of Pokemon being viewed -->
+				<div class="evolutions__image">
+				<img class="evoImage" src="/images2/<%= @stage2 %>.png" />
+				<div class="stage"><%= @stage2 %></div>
+				</div>
+ 	<%  end 
+
+		if @stage3 != "None"%>
+
+			<!-- Image of Pokemon being viewed -->
+				<div class="evolutions__image">
+				<img class="evoImage" src="/images2/<%= @stage3 %>.png" />
+				<div class="stage"><%= @stage3 %></div>
+				</div>
+			</div>
+ 	<% end %>
+ 		</div>
+	</div>
+
+<div class="statsContainer">
+
+	<div class="stats">
+		<div class="stats__title">
+			Height:
+		</div> 
+		<div class="stats__info">
+			<%=  @height %> ft
+		</div>
+	</div>
+
+	<div class="stats">
+		<div class="stats__title">
+			Weight:
+		</div>
+		<div class="stats__info">
+			<%= @weight %> lbs
+		</div>
+	</div>
+
+	<div class="stats">
+		<div class="stats__title">
+			Gender:
+		</div>
+		<div class="stats__info">
+			<%= @gender %>
+		</div>
+	</div>
+
+	<div class="stats">
+		<div class="stats__title">
+			Type:
+		</div>
+		<div class="stats__info">
+			<%= @type %>
+		</div>
+	</div>
+
+	<div class="stats">
+		<div class="stats__title">
+			CP:
+		</div>
+		<div class="stats__info">
+			<%= @cp %>
+		</div>
+	</div>
+
+	<div class="stats">
+		<div class="stats__title">
+			HP:
+		</div>
+		<div class="stats__info">
+			<%= @hp %>
+		</div>
+	</div>		
+
+	<div class="stats">
+		<div class="stats__title">
+			Favorite:
+		</div>
+
+	<% if @favorite == "yes" %>
+
+		<div class="stats__info">
+			<img class="favoriteHeart" src="/images2/heart.png" alt="Heart" />
+		</div>
+
+	<% else %>
+
+		<div class="stats__info">
+			<%= @favorite %>
+		</div>
+
+	<% end %>
+	</div>
+	
+</div>
+
+	<div class="editText">
+		<a href="/edit?name=<%= @name %>">Edit Information</a>
+	</div>

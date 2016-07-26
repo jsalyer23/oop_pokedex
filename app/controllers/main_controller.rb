@@ -1,0 +1,3 @@
+MyApp.get "/" do
+	
+end
