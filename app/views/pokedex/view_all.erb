@@ -2,12 +2,10 @@
 <div class="header">
 	Your Pok&eacute;mon
 </div>
-<div>
-	<img src="<%= @bulbasaur %>" />
-</div>
+
 
 <div class="viewAllPokemon">
-<% if @all_pokemon.empty? == true %>
+<% if @all_pokemon.empty? %>
 
 	<div>
 		<%= @no_pokemon_error %>
