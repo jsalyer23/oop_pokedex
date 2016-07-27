@@ -166,11 +166,11 @@ class Pokeapi
 	end
 
 	def species_url
-		@api["species"]["url"]
+		return @api["species"]["url"]
 	end
 
 	def id
-		@api["id"]
+		return @api["id"]
 	end
 
 	def abilities
