@@ -6,9 +6,9 @@ class PokemonTest < Minitest::Test
     super
 
     # @file = "test_pokedex.csv"
+    @pokemon = Pokemon.new("Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
 
-
-    
+    binding.pry
     # This setup will automatically be run before each test below.
   end
 
@@ -16,10 +16,10 @@ class PokemonTest < Minitest::Test
   # that begins with test_ or it won't work. An example test:
 
   def test_traits
-  	pokemon = Pokemon.new("Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
-  	traits = pokemon.traits
-
+  	
+  	traits = @pokemon.traits
+  	binding.pry
   	assert_kind_of(traits, Array)
-    assert_equal(traits, ["Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"]])
+    assert_equal(traits, ["Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", "fire","normal"])
   end
 end
