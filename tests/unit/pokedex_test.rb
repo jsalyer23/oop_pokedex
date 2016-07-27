@@ -20,6 +20,6 @@ class PokemonTest < Minitest::Test
   	traits = @pokemon.traits
   	binding.pry
   	assert_kind_of(Array, traits)
-    assert_equal(traits, ["Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", "fire","normal"])
+    assert_equal(traits, ["Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", "fire", "normal"])
   end
 end

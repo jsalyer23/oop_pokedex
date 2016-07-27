@@ -6,7 +6,13 @@ MyApp.get "/view" do
 
 	@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
 
-	if @existing.search_by_name == false
+	if @existing.search_by_name[0] == params[:name]
+		# Array of traits for an Pokemon that exists to use on View page
+		@pokemon = @existing.search_by_name
+		
+		
+		
+	elsif @existing.search_by_name == false
 		@name = params[:name].downcase
 		@gender = params[:gender]
 		@cp = params[:cp]
@@ -37,11 +43,8 @@ MyApp.get "/view" do
 		@pokedex.save_pokemon
 		# This is an Array of traits to use on the View page
 		@pokemon = @new_pokemon.traits
-	else
-		# Array of traits for an Pokemon that exists to use on View page
-		@pokemon = @existing.search_by_name
-		return true
 
+		
 	end
 
 
