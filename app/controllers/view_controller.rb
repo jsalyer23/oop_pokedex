@@ -1,6 +1,6 @@
 MyApp.get "/add" do
 	@title = "Add New Pok&eacute;mon"
-	@file = "/models/pokedex.csv"
+	@file = "pokedex.csv"
 
 	@all_pokemon = PokedexAll.new(@file)
 
