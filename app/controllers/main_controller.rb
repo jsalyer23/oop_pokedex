@@ -1,11 +1,11 @@
 MyApp.get "/" do
 	@title = "Personal Pok&eacute;dex"
 
-	@file = "pokedex.csv"
+	@file = "app/models/pokedex.csv"
 	
 	@pokedex = PokedexAll.new(@file)
 	@favorites = PokedexSearch.new("", @pokedex.all_pokemon)
-	@random_favorite = @favorites.favorite.sample
+	@random_favorite = @favorites.favorites.sample
 	@no_pokemon_error = "Visit the Add Pokemon page to start building your Pokedex"
 
 	@name = @random_favorite[0]

@@ -1,6 +1,6 @@
-MyApp.get "/add" do
+MyApp.get "/view" do
 	@title = "Add New Pok&eacute;mon"
-	@file = "pokedex.csv"
+	@file = "app/models/pokedex.csv"
 
 	@all_pokemon = PokedexAll.new(@file)
 
@@ -42,5 +42,5 @@ MyApp.get "/add" do
 	end
 
 
-	erb :"pokedex/add"
+	erb :"pokedex/view"
 end

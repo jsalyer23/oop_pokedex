@@ -48,7 +48,7 @@ class PokedexSave < Pokemon
 	# pokemon = Array returned from Pokemon.traits
 	# file = File to save to
 	def initialize(pokemon, file)
-		@pokemon = pokemon.traits
+		@pokemon = pokemon
 		@file = file
 		
 	end
@@ -100,7 +100,7 @@ class PokedexSearch < PokedexAll
 	# pokemon = Array of all Pokemon in Pokedex
 	def initialize(input, pokemon)
 		@input = input
-		@all_pokemon = pokemon.pokemon_array
+		@all_pokemon = pokemon
 	end
 
 	# Searches for any matching trait
@@ -262,7 +262,15 @@ end
 # new_pokemon = Pokemon.new("Ninetales", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
 # pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
 
+# another_pokemon = Pokemon.new("Blastoise", 423, 100, "Male", 67, 22, "yes", "Squirtle", "Wartortle", "Blastoise", ["water"])
+# pokedex2 = PokedexSave.new(another_pokemon, "pokedex.csv")
+
+# yet_pokemon = Pokemon.new("Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
+# pokedex3 = PokedexSave.new(yet_pokemon, "pokedex.csv")
+
+# pokedex2.save_pokemon
 # pokedex.save_pokemon
+# pokedex3.save_pokemon
 
 # pokemon = PokedexAll.new("pokedex.csv")
 
