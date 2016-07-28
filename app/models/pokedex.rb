@@ -138,7 +138,7 @@ class PokedexSearch < PokedexAll
 	def search_for_favorites
 		favorites = []
 		@all_pokemon.each do |pokemon|
-			if pokemon[6] == "yes"
+			if pokemon[6] == "on"
 				favorites.push(pokemon)
 			end
 		end
