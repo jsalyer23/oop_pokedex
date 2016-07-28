@@ -2,24 +2,30 @@ require "httparty"
 require "pry"
 require "json"
 
+
 # This class takes in data about a Pokemon, creating a new Pokemon for the Pokedex
 
 class Pokemon
 	# name, cp, hp, favorite, and gender are entered by the user
 	#
 	# height, weight, stages, and types come from the API request
-	def initialize(name, height, weight, gender, cp, hp, favorite, stage1, stage2, stage3, type)
+	def initialize(pokedex_id, name, height, weight, gender, favorite, cp, hp)
 		@name = name
 		@height = height
 		@weight = weight
 		@gender = gender
-		@type = type
+		# @type = type
 		@cp = cp
 		@hp = hp
 		@favorite = favorite
-		@stage1 = stage1
-		@stage2 = stage2
-		@stage3 = stage3
+		# @stage1 = stage1
+		# @stage2 = stage2
+		# @stage3 = stage3
+		@pokedex_id = pokedex_id
+	end
+
+	def date_today
+
 	end
 
 	# Converts Array into String
@@ -34,9 +40,8 @@ class Pokemon
 	# RETURNS ARRAY
 	def traits
 		pokemon = []
-		pokemon.push(@name, @height, @weight, @gender,
-			@cp, @hp, @favorite, @stage1,
-			@stage2, @stage3, self.type)
+		pokemon.push(@pokedex_id, @name, @height, @weight, @gender,
+			@favorite, @hp, @cp)
 		return pokemon
 	end
 
@@ -47,9 +52,9 @@ class PokedexSave < Pokemon
 
 	# pokemon = Array returned from Pokemon.traits
 	# file = File to save to
-	def initialize(pokemon, file)
+	def initialize(pokemon)
 		@pokemon = pokemon
-		@file = file
+		# @file = file
 		
 	end
 
@@ -61,6 +66,22 @@ class PokedexSave < Pokemon
 		CSV.open(@file, "a") do |csv|
 			csv << @pokemon
 		end
+	end
+
+	def pokemon_columns
+		columns = "pokemon (pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves)"
+		return columns
+	end
+
+	def pokemon_values
+		values = @pokemon.join(", ")
+		return values
+	end
+
+	def save_to_database
+		require "sqlite3"
+		DATABASE.execute("INSERT INTO #{self.pokemon_columns}
+			VALUES (#{self.pokemon_values});")
 	end
 end
 
@@ -296,9 +317,10 @@ end
 # new_pokemon = Pokemon.new("Ninetales", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
 # pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
 
-# another_pokemon = Pokemon.new("Blastoise", 423, 100, "Male", 67, 22, "yes", "Squirtle", "Wartortle", "Blastoise", ["water"])
-# pokedex2 = PokedexSave.new(another_pokemon, "pokedex.csv")
+another_pokemon = Pokemon.new(9, "Blastoise", 423, 100, "Male", true, 67, 22)
+pokedex2 = PokedexSave.new(another_pokemon.traits)
 
+pokedex2.save_to_database
 # yet_pokemon = Pokemon.new("Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
 # pokedex3 = PokedexSave.new(yet_pokemon, "pokedex.csv")
 

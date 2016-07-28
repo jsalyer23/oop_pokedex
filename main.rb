@@ -30,7 +30,7 @@ end
 
 require 'tilt/erb'
 
-DATABASE = SQLite3::Database.new "pokedex.db"
+DATABASE = SQLite3::Database.new "pokedex.rb"
 DATABASE.results_as_hash = true
 
 Dir[File.dirname(__FILE__) + '/app/models/*.rb'].each {|file| require file }
