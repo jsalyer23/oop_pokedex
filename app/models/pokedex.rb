@@ -159,20 +159,30 @@ class PokedexSearch < PokedexAll
 
 end
 
+# This class deals with the initial API request using name
 class Pokeapi
 
 	def initialize(api_request)
 		@api = api_request
 	end
 
+	# This method finds the species URL from within the request
+	#
+	# RETURNS STRING (URL)
 	def species_url
 		return @api["species"]["url"]
 	end
 
+	# This method finds the Pokemon's Pokedex number
+	#
+	# RETURNS INTEGER (FIXNUM)
 	def id
 		return @api["id"]
 	end
 
+	# This method adds the abilities to an Array to be used for our API
+	#
+	# RETURNS ARRAY
 	def abilities
 		abilities = []
 		@api["abilities"].each do |i|
@@ -181,6 +191,9 @@ class Pokeapi
 		return abilities
 	end
 
+	# This method adds the Pokemon's type(s) to an Array
+	#
+	# RETURNS ARRAY
 	def types
 		types = []
 		@api["types"].each do |i|
@@ -189,30 +202,38 @@ class Pokeapi
 		return types
 	end
 
+	# This method finds the height from the API request
+	#
+	# RETURNS INTEGER (FIXNUM)
 	def height
 		return @api["height"]
 	end
 
+	# This method finds the weight from the API request
+	#
+	# RETURNS INTEGER (FIXNUM)
 	def weight
 		return @api["weight"]
 	end
-
-
-
-
-
 end
 
+# This class deals with the species info from species API request
 class PokeapiSpecies
 
 	def initialize(species_request)
 		@api_species = species_request
 	end
 
+	# This method selects the evolution chain URL
+	#
+	# RETURNS STRING (URL)
 	def evolution_url
 		@api_species["evolution_chain"]["url"]
 	end
 
+	# This method selects the evolution chain ID from the evolution chain URL
+	#
+	# RETURNS STRING (INTEGER)
 	def evolution_id
 		species2 = self.evolution_url.split("n/")
 		id = species2[1].split("/")
@@ -220,16 +241,23 @@ class PokeapiSpecies
 	end
 end
 
+# This class gathers the evolution stages for a Pokemon, takes in evolution request from API
 class PokeapiEvolutions
 
 	def initialize(evolution_request)
 		@api_evolution = evolution_request
 	end
 
+	# This method selects the name of the first stage
+	#
+	# RETURNS STRING
 	def stage1
 		return @api_evolution["chain"]["species"]["name"]
 	end
 
+	# This method selects the name of the second stage if it exists
+	#
+	# RETURNS STRING
 	def stage2
 		if @api_evolution["chain"]["evolves_to"][0] == nil ||
 			@api_evolution["chain"]["evolves_to"][0]["species"] == nil ||
@@ -240,6 +268,9 @@ class PokeapiEvolutions
 		end
 	end
 
+	# This method selects the name of the third stage if it exists
+	#
+	# RETURNS STRING
 	def stage3
 		if @api_evolution["chain"]["evolves_to"][0] == nil ||
 			@api_evolution["chain"]["evolves_to"][0]["evolves_to"][0] == nil ||
@@ -251,6 +282,9 @@ class PokeapiEvolutions
 		end
 	end
 
+	# This method adds the results of stage1, stage2, and stage3 to an Array
+	#
+	# RETURNS ARRAY
 	def evolutions
 		evolutions = []
 		evolutions.push(self.stage1, self.stage2, self.stage3)
