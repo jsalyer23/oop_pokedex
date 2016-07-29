@@ -9,24 +9,18 @@ class Pokemon
 	# name, cp, hp, favorite, and gender are entered by the user
 	#
 	# height, weight, stages, and types come from the API request
-	def initialize(pokedex_id, name, height, weight, gender, favorite, hp, cp, evolves)
+	def initialize(pokedex_id, name, height, weight, gender, favorite, hp, cp, evolves, type1, type2)
 		@name = name
 		@height = height
 		@weight = weight
 		@gender = gender
-		# @type = type
+		@type1 = type1
+		@type2 = type2
 		@cp = cp
 		@hp = hp
 		@favorite = favorite
-		# @stage1 = stage1
-		# @stage2 = stage2
-		# @stage3 = stage3
 		@pokedex_id = pokedex_id
 		@evolves = evolves
-	end
-
-	def date_today
-
 	end
 
 	# Converts Array into String
@@ -42,7 +36,7 @@ class Pokemon
 	def traits
 		pokemon = []
 		pokemon.push(@pokedex_id, @name, @height, @weight, @gender,
-			@favorite, @hp, @cp, @evolves)
+			@favorite, @hp, @cp, @evolves, @type1, @type2)
 		return pokemon
 	end
 
@@ -59,30 +53,27 @@ class PokedexSave < Pokemon
 		
 	end
 
-	# Save Pokemon to flat file
+	# This method puts all of the columns for the Pokemon table into a string
 	#
-	# SAVES DATA
-	def save_pokemon
-		require "csv"
-		CSV.open(@file, "a") do |csv|
-			csv << @pokemon
-		end
-	end
-
+	# RETURNS STRING
 	def pokemon_columns
-		columns = "pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves"
+		columns = "pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves, type1, type2"
 		return columns
 	end
 
+	# This method adds all the traits for a new Pokemon into a string
+	#
+	# RETURNS STRING
 	def pokemon_values
 		values = "(\'#{@pokemon[0]}\', \'#{@pokemon[1]}\', \'#{@pokemon[2]}\', \'#{@pokemon[3]}\',
 				\'#{@pokemon[4]}\', \'#{@pokemon[5]}\', \'#{@pokemon[6]}\', \'#{@pokemon[7]}\', CURRENT_DATE,
-				\'#{@pokemon[8]}\')"
+				\'#{@pokemon[8]}\', \'#{@pokemon[9]}\', \'#{@pokemon[10]}\')"
 		return values
 	end
 
-
-
+	# This method saves a new Pokemon as a new row in the Pokemon table
+	#
+	# SAVES TO DATABASE (POKEMON TABLE)
 	def save_to_database
 		require "sqlite3"
 		DATABASE.execute("INSERT INTO pokemon (#{self.pokemon_columns})
@@ -95,21 +86,13 @@ end
 # This class retrieves all Pokemon from flat file
 class PokedexAll
 
-	# file = Pokedex file (flat storage)
-	def initialize(file)
-		@file = file
-	end
-
-	# Adds all Pokemon from Pokedex into an Array
+	# Adds all Pokemon from database into an Array
 	# 
-	# RETURNS ARRAY
+	# RETURNS ASSOCIATIVE ARRAY (HASHES)
 	def all_pokemon
-		require "csv"
-		pokemon_array= []
-		CSV.foreach(@file) do |pokemon|
-			pokemon_array.push(pokemon)
-		end
-		return pokemon_array
+		require "sqlite3"
+		all_pokemon = DATABASE.execute("SELECT * FROM pokemon;")
+		return all_pokemon
 	end
 
 	# Returns all Pokemon
@@ -125,21 +108,21 @@ end
 class PokedexSearch < PokedexAll
 
 	# input = search input
-	# pokemon = Array of all Pokemon in Pokedex
+	# pokemon = Array of all Pokemon in database (pokedex.rb)
 	def initialize(input, pokemon)
 		@input = input
 		@all_pokemon = pokemon
 	end
 
-	# Searches for any matching trait
+	# Searches for any matching trait from add Pokemon returned from the database
 	# 
-	# RETURNS ARRAY
+	# RETURNS ASSOCIATIVE ARRAY (HASHES)
 	def search_all
 		results_array = []
 		found = "no"
 		@all_pokemon.each do |pokemon|
 			pokemon.each do |trait|
-				if trait == @input && found == "no"
+				if pokemon[trait] == @input && found == "no"
 					results_array.push(pokemon)
 					found = "yes"
 				end
@@ -153,17 +136,25 @@ class PokedexSearch < PokedexAll
 	# RETURNS STRING OR FALSE
 	def search_by_name
 		@all_pokemon.each do |pokemon|
-			if @input.capitalize == pokemon[0]
+			if @input.capitalize == pokemon["name"]
 				return pokemon
 			end
 		end
 		return false
 	end
 
+	# Gets all favorited Pokemon from the database as an Array of Hashes
+	#
+	# RETURNS ASSOCIATIVE ARRAY (HASHES)
+	def select_favorites
+		favorites = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
+		return favorites
+	end
+
 	# Adds favorited Pokemon to Array
 	#
 	# RETURNS ARRAY
-	def search_for_favorites
+	def favorites_array
 		favorites = []
 		@all_pokemon.each do |pokemon|
 			if pokemon[6] == "on"
@@ -174,7 +165,7 @@ class PokedexSearch < PokedexAll
 	end
 
 	def favorites
-		return self.search_for_favorites
+		return self.select_favorites
 	end
 
 	def all_results
@@ -228,6 +219,23 @@ class Pokeapi
 			types.push(i["type"]["name"].capitalize)
 		end
 		return types
+	end
+
+	def database_types
+		types_table = DATABASE.execute("SELECT id FROM types WHERE name='#{self.types[0]}' OR name='#{self.types[1]}';")
+		return types_table
+	end
+
+	def get_type_id
+		type_ids = [self.database_types[0]["id"]]
+
+		if self.database_types[1] == nil
+			type_ids[1] = nil
+		else
+			type_ids[1] = self.database_types[1]["id"]
+		end
+		return type_ids
+
 	end
 
 	# This method finds the height from the API request
@@ -322,6 +330,7 @@ class PokeapiEvolutions
 	
 end
 
+# This class formats and saves evolution data to the database
 class DatabaseEvolutions < PokeapiEvolutions
 
 	def initialize(evolutions, evolution_id)
@@ -329,16 +338,25 @@ class DatabaseEvolutions < PokeapiEvolutions
 		@id = evolution_id
 	end
 
+	# This method formats the columns in the evolutions table
+	#
+	# RETURNS STRING
 	def evolution_columns
 		columns = "evolution_id, stage1, stage2, stage3"
 		return columns
 	end
 
+	# This method adds evolution chain id and stages to evoutions table
+	#
+	# RETURNS STRING
 	def evolution_values
 		values = "(\'#{@id}\', \'#{@evolutions[0]}\', \'#{@evolutions[1]}\', \'#{@evolutions[2]}\')"
 		return values
 	end
 
+	# This method saves evolution data to the evolutions table in database
+	#
+	# SAVES TO DATABASE (EVOLUTIONS TABLE)
 	def save_evolution_table
 		require "sqlite3"
 		DATABASE.execute("INSERT INTO evolutions (#{self.evolution_columns}) VALUES #{self.evolution_values};")

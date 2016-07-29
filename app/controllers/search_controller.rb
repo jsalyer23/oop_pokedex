@@ -3,7 +3,7 @@ MyApp.get "/searchresults" do
 	@title = "Pok&eacute;mon Search Results"
 	@file = 'app/models/pokedex.csv'
 
-	@all_pokemon = PokedexAll.new(@file)
+	@all_pokemon = PokedexAll.new
 
 	@existing = PokedexSearch.new(params[:search], @all_pokemon.pokemon_array)
 

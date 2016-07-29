@@ -3,7 +3,7 @@ MyApp.get "/" do
 
 	@file = "app/models/pokedex.csv"
 	
-	@pokedex = PokedexAll.new(@file)
+	@pokedex = PokedexAll.new
 	@favorites = PokedexSearch.new("", @pokedex.all_pokemon)
 	@random_favorite = @favorites.favorites.sample
 	@no_pokemon_error = "Visit the Add Pokemon page to start building your Pokedex"
