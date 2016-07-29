@@ -53,6 +53,8 @@ class PokedexSave < Pokemon
 		
 	end
 
+	
+
 	# This method puts all of the columns for the Pokemon table into a string
 	#
 	# RETURNS STRING
@@ -148,6 +150,8 @@ class PokedexSearch < PokedexAll
 		end
 		return false
 	end
+
+	
 
 	# Gets all favorited Pokemon from the database as an Array of Hashes
 	#

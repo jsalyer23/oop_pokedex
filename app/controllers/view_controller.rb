@@ -1,6 +1,21 @@
 MyApp.get "/view" do
 	@title = "Add New Pok&eacute;mon"
-	@file = "app/models/pokedex.csv"
+	if params[:gender] != nil
+		@gender = params[:gender]
+		@cp = params[:cp]
+		@hp = params[:hp]
+		@favorite = params[:favorite]
+		@id = params[:id]
+
+		if @favorite == "on"
+			@favorite = true
+		else
+			@favorite = false
+		end
+
+		DATABASE.execute("UPDATE pokemon SET hp=\'#{@hp}\', cp=\'#{@cp}\', gender=\'#{@gender}\', favorite=\'#{@favorite}\' 
+			WHERE id=\'#{@id}\';")
+	end
 
 	@all_pokemon = PokedexAll.new
 
