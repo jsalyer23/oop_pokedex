@@ -6,12 +6,19 @@ MyApp.get "/view" do
 
 	@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
 
-	if @existing.search_by_name == true
+	if @existing.search_by_name != nil && @existing.search_by_name != false
 		# Array of traits for an Pokemon that exists to use on View page
 		@pokemon = @existing.search_by_name
-		
 
 		
+		if @existing.type_names[1] != nil
+		@type1 = @existing.type_names[0]["name"]
+		@type2 = ", " + @existing.type_names[1]["name"]
+		else
+			@type1 = @existing.type_names[0]["name"]
+			@type2 = ""
+		end
+
 	elsif @existing.search_by_name == false
 		@name = params[:name].downcase
 		@gender = params[:gender]
@@ -36,7 +43,7 @@ MyApp.get "/view" do
 		@height = @api_data.height
 		@weight = @api_data.weight
 		@types_ids = @api_data.get_type_id
-binding.pry
+
 		
 		@evolves = ""
 
@@ -64,10 +71,34 @@ binding.pry
 		@pokedex.save_to_database
 		@db_evolutions.save_evolution_table
 
+		@all_pokemon = PokedexAll.new
+
+		@results = PokedexSearch.new(@name.capitalize, @all_pokemon.pokemon_array)
+
+
 		# This variable shows the wrong stuff now so it needs fixed....
 		# This is an Array of traits to use on the View page
-		@pokemon = @new_pokemon.traits
+		@pokemon = @results.search_by_name
+		@type1 = @results.type_names[0]["name"]
 
+		if @results.type_names[1] != nil
+			@type2 = ", " + @results.type_names[1]["name"]
+		else
+			@type2 = ""
+		end
+
+		@stage1 = @api_evolution.evolutions[0].capitalize
+		if @api_evolution.evolutions[1] != nil
+			@stage2 = @api_evolution.evolutions[1].capitalize
+		else
+			@stage2 = ""
+		end
+
+		if @api_evolution.evolutions[2] != nil
+			@stage3 = @api_evolution.evolutions[2].capitalize
+		else
+			@stage3 = ""
+		end
 
 	end
 

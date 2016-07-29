@@ -14,7 +14,7 @@
 <% else %>
 	<% @all_pokemon.each do |pokemon| %>
 	<div class="viewAllPokemon__link">
-		<a href="/view?name=<%= pokemon[0] %>"><img class="pokemonImage" src="/images2/<%=pokemon[0] %>.png" /></a>
+		<a href="/view?name=<%= pokemon["name"] %>"><img class="pokemonImage" src="/images2/<%=pokemon["name"] %>.png" /></a>
 	</div>
 
 	<% end %>

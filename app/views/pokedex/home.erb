@@ -13,7 +13,7 @@
 <% else %>
 
 <div class="random">
-<img class="viewImage" src="/images2/<%= @random_favorite[0] %>.png" />
+<img class="viewImage" src="/images2/<%= @random_favorite["name"] %>.png" />
 
 	<div class="statsContainer">
 	
@@ -31,7 +31,7 @@
 				Height:
 			</div>
 			<div class="stats__info">
-				<%= @height %> ft
+				<%= @height %> in
 			</div>
 		</div>
 
@@ -58,7 +58,7 @@
 				Type:
 			</div>
 			<div class="stats__info">
-				<%= @type %>
+				<%= @type1 %> <%= @type2 %>
 			</div>
 		</div>
 
@@ -93,7 +93,7 @@
 	<% else %>
 
 		<div class="stats__info">
-			<%= @random_favorite[7] %>
+			NO
 		</div>
 
 	<% end %>

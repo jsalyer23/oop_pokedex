@@ -4,20 +4,12 @@
 	Search Results
 </div>
 <div class="searchResults">
-<% 
-if @search_results.count > 0  
 
-	@search_results.each do |record|
-
-		@height = record[1].to_f / 10 * 3.28
-		@height = @height.round(2)
-		@weight = record[2].to_i / 4.54
-		@weight = @weight.round(2)
-		
-
-	%>	
+<% if @search_results.count > 0 %>
+	<% @search_results.each do |pokemon| %>
+	
 	<div class="wrapper">
-	<img class="viewImage" src="/images2/<%= record[0] %>.png" />
+	<img class="viewImage" src="/images2/<%= pokemon["name"] %>.png" />
 		
 		
 	<div class="statsContainer">
@@ -27,7 +19,7 @@ if @search_results.count > 0
 				Name:
 			</div>
 			<div class="stats__info">
-				<%= record[0] %>
+				<%= pokemon["name"] %>
 			</div>
 		</div>
 
@@ -36,7 +28,7 @@ if @search_results.count > 0
 				Height:
 			</div>
 			<div class="stats__info">
-				<%= @height %>
+				<%= pokemon["height"] %>
 			</div>
 		</div>
 
@@ -45,7 +37,7 @@ if @search_results.count > 0
 				Weight:
 			</div>
 			<div class="stats__info">
-				<%= @weight %>
+				<%= pokemon["weight"] %>
 			</div>
 		</div>
 
@@ -54,7 +46,7 @@ if @search_results.count > 0
 				Gender:
 			</div>
 			<div class="stats__info">
-				<%= record[3] %>
+				<%= pokemon["gender"] %>
 			</div>
 		</div>
 
@@ -63,7 +55,7 @@ if @search_results.count > 0
 				Type:
 			</div>
 			<div class="stats__info">
-				<%= record[10] %>
+				<%= @type1 %> <%= @type2 %>
 			</div>
 		</div>
 
@@ -72,7 +64,7 @@ if @search_results.count > 0
 				CP:
 			</div>
 			<div class="stats__info">
-				<%= record[4] %>
+				<%= pokemon["cp"] %>
 			</div>
 		</div>
 
@@ -82,7 +74,7 @@ if @search_results.count > 0
 				HP:
 			</div>
 			<div class="stats__info">
-				<%= record[5] %>
+				<%= pokemon["hp"] %>
 
 			</div>
 		</div>
@@ -92,10 +84,10 @@ if @search_results.count > 0
 					Favorite:
 				</div>
 				<div class="stats__info">
-				<% if record[6] == "on" %>
+				<% if pokemon["favorite"] == "true" %>
 					<img class="favoriteHeart" src="/images2/heart.png" alt="Heart" />
 					<% else %>
-					<%= "no" %>
+						NO
 					<% end %>
 				</div>
 		</div>
@@ -103,7 +95,7 @@ if @search_results.count > 0
 	</div>
 
 	<div class="editText">
-		<a href="/view?name=<%= record[0] %>">View Individual Pok&eacute;mon</a>
+		<a href="/view?name=<%= pokemon["name"] %>">View Individual Pok&eacute;mon</a>
 	</div>
 </div>
 <%	end 

@@ -131,6 +131,12 @@ class PokedexSearch < PokedexAll
 		return results_array
 	end
 
+	def search_database
+		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{@input}%'
+			OR gender LIKE '%#{@input}%' OR pokedex_id LIKE '%#{@input}%';")
+		return search_results
+	end
+
 	# Searches for specific name
 	#
 	# RETURNS STRING OR FALSE
@@ -149,6 +155,16 @@ class PokedexSearch < PokedexAll
 	def select_favorites
 		favorites = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
 		return favorites
+	end
+
+	def type_id
+		types_id = [self.search_by_name["type1"], self.search_by_name["type2"]]
+		return types_id
+	end
+
+	def type_names
+		types_names = DATABASE.execute("SELECT name FROM types WHERE id='#{self.type_id[0]}' OR id='#{self.type_id[1]}';")
+		return types_names
 	end
 
 	# Adds favorited Pokemon to Array
@@ -225,6 +241,8 @@ class Pokeapi
 		types_table = DATABASE.execute("SELECT id FROM types WHERE name='#{self.types[0]}' OR name='#{self.types[1]}';")
 		return types_table
 	end
+
+	
 
 	def get_type_id
 		type_ids = [self.database_types[0]["id"]]

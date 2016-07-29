@@ -4,5 +4,6 @@ MyApp.get "/viewall" do
 	@pokemon = PokedexAll.new
 	@all_pokemon = @pokemon.all_pokemon
 
+
 	erb :"pokedex/view_all"
 end

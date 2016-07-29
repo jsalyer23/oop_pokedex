@@ -2,12 +2,12 @@
 <script type="text/javascript" src="/js/toggleEvolution.js"></script>
 <div class="header">
 <!-- Name of Pokemon being viewed -->
-	<%= @pokemon[1] %>
+	<%= @pokemon["name"] %>
 </div>
 
 	<div>
 	<!-- Image of Pokemon being viewed -->
-		<img class="viewImage" src="/images2/<%= @pokemon[0] %>.png" />
+		<img class="viewImage" src="/images2/<%= @pokemon["name"] %>.png" />
 	</div>
 
 
@@ -21,32 +21,32 @@
 		<div id="hideText">
 			Hide Evolutions
 		</div>
-	<% if @pokemon[7] != "None" %>
+	<% if @stage1 != "None" %>
 		<div id="toggle">
 			<div class="evoWrapper">
 				<div class="evolutions__image">
 			<!-- Image of Pokemon being viewed -->
-				<img class="evoImage" src="/images2/<%= @pokemon[7] %>.png" />
-				<div class="stage"><%= @pokemon[7] %></div>
+				<img class="evoImage" src="/images2/<%= @stage1 %>.png" />
+				<div class="stage"><%= @stage1 %></div>
 				</div>
 
 	<% end 
 
-		if @pokemon[8] != "None"  %>
+		if @stage2 != "None" && @stage2 != ""  %>
 
 			<!-- Image of Pokemon being viewed -->
 				<div class="evolutions__image">
-				<img class="evoImage" src="/images2/<%= @pokemon[8] %>.png" />
-				<div class="stage"><%= @pokemon[8] %></div>
+				<img class="evoImage" src="/images2/<%= @stage2 %>.png" />
+				<div class="stage"><%= @stage2 %></div>
 				</div>
  	<%  end 
 
-		if @pokemon[9] != "None"%>
+		if @stage3 != "None" && @stage3 != ""%>
 
 			<!-- Image of Pokemon being viewed -->
 				<div class="evolutions__image">
-				<img class="evoImage" src="/images2/<%= @pokemon[9] %>.png" />
-				<div class="stage"><%= @pokemon[9] %></div>
+				<img class="evoImage" src="/images2/<%= @stage3 %>.png" />
+				<div class="stage"><%= @stage3 %></div>
 				</div>
 			</div>
  	<% end %>
@@ -60,7 +60,7 @@
 			Height:
 		</div> 
 		<div class="stats__info">
-			<%=  @pokemon[1] %> ft
+			<%=  @pokemon["height"] %> in
 		</div>
 	</div>
 
@@ -69,7 +69,7 @@
 			Weight:
 		</div>
 		<div class="stats__info">
-			<%= @pokemon[2] %> lbs
+			<%= @pokemon["weight"]%> lbs
 		</div>
 	</div>
 
@@ -78,7 +78,7 @@
 			Gender:
 		</div>
 		<div class="stats__info">
-			<%= @pokemon[3] %>
+			<%= @pokemon["gender"] %>
 		</div>
 	</div>
 
@@ -87,7 +87,7 @@
 			Type:
 		</div>
 		<div class="stats__info">
-			<%= @pokemon[10] %>
+			<%= @type1 %> <%= @type2 %>
 		</div>
 	</div>
 
@@ -96,7 +96,7 @@
 			CP:
 		</div>
 		<div class="stats__info">
-			<%= @pokemon[4] %>
+			<%= @pokemon["cp"] %>
 		</div>
 	</div>
 
@@ -105,7 +105,7 @@
 			HP:
 		</div>
 		<div class="stats__info">
-			<%= @pokemon[5] %>
+			<%= @pokemon["hp"] %>
 		</div>
 	</div>		
 
@@ -114,7 +114,7 @@
 			Favorite:
 		</div>
 
-	<% if @pokemon[6] == "on" %>
+	<% if @pokemon["favorite"] == true || @pokemon["favorite"] == "true" %>
 
 		<div class="stats__info">
 			<img class="favoriteHeart" src="/images2/heart.png" alt="Heart" />
@@ -123,7 +123,7 @@
 	<% else %>
 
 		<div class="stats__info">
-			<%= @pokemon[6] %>
+			NO
 		</div>
 
 	<% end %>
@@ -132,5 +132,5 @@
 </div>
 
 	<div class="editText">
-		<a href="/edit?name=<%= @pokemon[0] %>">Edit Information</a>
+		<a href="/edit?name=<%= @pokemon["name"] %>">Edit Information</a>
 	</div>

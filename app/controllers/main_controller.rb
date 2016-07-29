@@ -7,22 +7,31 @@ MyApp.get "/" do
 	@favorites = PokedexSearch.new("", @pokedex.all_pokemon)
 	@random_favorite = @favorites.favorites.sample
 	@no_pokemon_error = "Visit the Add Pokemon page to start building your Pokedex"
+	@existing = PokedexSearch.new(@random_favorite["name"], @pokedex.all_pokemon)
 
-	@name = @random_favorite[0]
-	@height = @random_favorite[1].to_f / 10 * 3.28
-	@height = @height.round(2)
-	@weight = @random_favorite[2].to_i / 4.54
-	@weight = @weight.round(2)
-	@gender = @random_favorite[3]
-	@cp = @random_favorite[4]
-	@hp = @random_favorite[5]
-	@favorite = @random_favorite[6]
+	if @existing.type_names[1] != nil
+		@type1 = @existing.type_names[0]["name"]
+		@type2 = ", " + @existing.type_names[1]["name"]
+	else
+		@type1 = @existing.type_names[0]["name"]
+		@type2 = ""
+	end
+
+	@name = @random_favorite["name"]
+	@height = @random_favorite["height"]
+
+	@weight = @random_favorite["weight"]
+	
+	@gender = @random_favorite["gender"]
+	@cp = @random_favorite["cp"]
+	@hp = @random_favorite["hp"]
+	@favorite = @random_favorite["favorite"]
 	@stage1 = @random_favorite[7]
 	@stage2 = @random_favorite[8]
 	@stage3 = @random_favorite[9]
-	@type = @random_favorite[10]
+	
 
-	if @favorite == "on"
+	if @favorite == "true"
 		@favorite = "yes"
 	end
 
