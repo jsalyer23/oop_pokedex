@@ -6,11 +6,11 @@ MyApp.get "/view" do
 
 	@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
 
-	if @existing.search_by_name[0] == params[:name]
+	if @existing.search_by_name == true
 		# Array of traits for an Pokemon that exists to use on View page
 		@pokemon = @existing.search_by_name
 		
-		
+
 		
 	elsif @existing.search_by_name == false
 		@name = params[:name].downcase
@@ -18,6 +18,7 @@ MyApp.get "/view" do
 		@cp = params[:cp]
 		@hp = params[:hp]
 		@favorite = params[:favorite]
+
 		# Use for height and weight and types
 		@pokemon_request = HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{@name}")
 		
@@ -31,20 +32,36 @@ MyApp.get "/view" do
 		
 		@api_evolution = PokeapiEvolutions.new(@evolutions)
 
+		@id = @api_data.id
 		@height = @api_data.height
 		@weight = @api_data.weight
-		@stage1 = @api_evolution.stage1.capitalize
-		@stage2 = @api_evolution.stage2.capitalize
-		@stage3 = @api_evolution.stage3.capitalize
 		@types = @api_data.types
+		@evolves = ""
 
-		@new_pokemon = Pokemon.new(@name.capitalize, @height, @weight, @gender, @cp, @hp, @favorite, @stage1, @stage2, @stage3, @types)
-		@pokedex = PokedexSave.new(@new_pokemon.traits, @file)
-		@pokedex.save_pokemon
+		if @favorite == "on"
+			@favorite = true
+		else
+			@favorite = false
+		end
+
+		if (@api_evolution.evolutions[0] == @name && @api_evolution.evolutions[1] == nil) ||
+			(@api_evolution.evolutions[1] == @name && @api_evolution.evolutions[2] == nil) ||
+			(@api_evolution.evolutions[2] == @name && @api_evolution.evolutions[3] == nil)
+			@evolves = false
+		else
+			@evolves = true
+		end
+
+		@new_pokemon = Pokemon.new(@id, @name.capitalize, @height, @weight, @gender, @favorite, @hp, @cp, @evolves)
+		@pokedex = PokedexSave.new(@new_pokemon.traits)
+		@db_evolutions = DatabaseEvolutions.new(@api_evolution.evolutions, @api_species.evolution_id)
+
+		@pokedex.save_to_database
+		@db_evolutions.save_evolution_table
 		# This is an Array of traits to use on the View page
 		@pokemon = @new_pokemon.traits
 
-		
+
 	end
 
 

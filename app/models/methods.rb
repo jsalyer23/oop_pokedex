@@ -9,7 +9,7 @@ class Pokemon
 	# name, cp, hp, favorite, and gender are entered by the user
 	#
 	# height, weight, stages, and types come from the API request
-	def initialize(pokedex_id, name, height, weight, gender, favorite, cp, hp)
+	def initialize(pokedex_id, name, height, weight, gender, favorite, hp, cp, evolves)
 		@name = name
 		@height = height
 		@weight = weight
@@ -22,6 +22,7 @@ class Pokemon
 		# @stage2 = stage2
 		# @stage3 = stage3
 		@pokedex_id = pokedex_id
+		@evolves = evolves
 	end
 
 	def date_today
@@ -41,7 +42,7 @@ class Pokemon
 	def traits
 		pokemon = []
 		pokemon.push(@pokedex_id, @name, @height, @weight, @gender,
-			@favorite, @hp, @cp)
+			@favorite, @hp, @cp, @evolves)
 		return pokemon
 	end
 
@@ -69,20 +70,26 @@ class PokedexSave < Pokemon
 	end
 
 	def pokemon_columns
-		columns = "pokemon (pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves)"
+		columns = "pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves"
 		return columns
 	end
 
 	def pokemon_values
-		values = @pokemon.join(", ")
+		values = "(\'#{@pokemon[0]}\', \'#{@pokemon[1]}\', \'#{@pokemon[2]}\', \'#{@pokemon[3]}\',
+				\'#{@pokemon[4]}\', \'#{@pokemon[5]}\', \'#{@pokemon[6]}\', \'#{@pokemon[7]}\', CURRENT_DATE,
+				\'#{@pokemon[8]}\')"
 		return values
 	end
 
+
+
 	def save_to_database
 		require "sqlite3"
-		DATABASE.execute("INSERT INTO #{self.pokemon_columns}
-			VALUES (#{self.pokemon_values});")
+		DATABASE.execute("INSERT INTO pokemon (#{self.pokemon_columns})
+			VALUES #{self.pokemon_values};")
 	end
+
+
 end
 
 # This class retrieves all Pokemon from flat file
@@ -283,7 +290,7 @@ class PokeapiEvolutions
 		if @api_evolution["chain"]["evolves_to"][0] == nil ||
 			@api_evolution["chain"]["evolves_to"][0]["species"] == nil ||
 			@api_evolution["chain"]["evolves_to"][0]["species"]["name"] == nil
-			return "None"
+			return nil
 		else
 			return @api_evolution["chain"]["evolves_to"][0]["species"]["name"]
 		end
@@ -297,7 +304,7 @@ class PokeapiEvolutions
 			@api_evolution["chain"]["evolves_to"][0]["evolves_to"][0] == nil ||
 			@api_evolution["chain"]["evolves_to"][0]["evolves_to"][0]["species"] == nil ||
 			@api_evolution["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"] == nil
-			return "None"
+			return nil
 		else
 			return @api_evolution["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"]
 		end
@@ -309,18 +316,46 @@ class PokeapiEvolutions
 	def evolutions
 		evolutions = []
 		evolutions.push(self.stage1, self.stage2, self.stage3)
+		return evolutions
+	end
+
+	
+end
+
+class DatabaseEvolutions < PokeapiEvolutions
+
+	def initialize(evolutions, evolution_id)
+		@evolutions = evolutions
+		@id = evolution_id
+	end
+
+	def evolution_columns
+		columns = "evolution_id, stage1, stage2, stage3"
+		return columns
+	end
+
+	def evolution_values
+		values = "(\'#{@id}\', \'#{@evolutions[0]}\', \'#{@evolutions[1]}\', \'#{@evolutions[2]}\')"
+		return values
+	end
+
+	def save_evolution_table
+		require "sqlite3"
+		DATABASE.execute("INSERT INTO evolutions (#{self.evolution_columns}) VALUES #{self.evolution_values};")
 	end
 end
+
+
 
 
 
 # new_pokemon = Pokemon.new("Ninetales", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
 # pokedex = PokedexSave.new(new_pokemon, "pokedex.csv")
 
-another_pokemon = Pokemon.new(9, "Blastoise", 423, 100, "Male", true, 67, 22)
-pokedex2 = PokedexSave.new(another_pokemon.traits)
+# another_pokemon = Pokemon.new(9, "Blastoise", 423, 100, "Male", true, 67, 22, true)
+# pokedex2 = PokedexSave.new(another_pokemon.traits)
 
-pokedex2.save_to_database
+# pokedex2.save_to_database
 # yet_pokemon = Pokemon.new("Vulpix", 45, 100, "female", 67, 22, "no", "Vulpix", "Ninetales", "", ["fire", "normal"])
 # pokedex3 = PokedexSave.new(yet_pokemon, "pokedex.csv")
 
