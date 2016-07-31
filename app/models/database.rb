@@ -14,8 +14,6 @@ class PokedexSave < Pokemon
 		
 	end
 
-	
-
 	# This method puts all of the columns for the Pokemon table into a string
 	#
 	# RETURNS STRING
@@ -42,8 +40,6 @@ class PokedexSave < Pokemon
 		DATABASE.execute("INSERT INTO pokemon (#{self.pokemon_columns})
 			VALUES #{self.pokemon_values};")
 	end
-
-
 end
 
 # This class retrieves all Pokemon from flat file
@@ -112,19 +108,6 @@ class PokedexSearch < PokedexAll
 		return false
 	end
 
-	def search_by_id
-		@all_pokemon.each do |pokemon|
-			
-			if @input.to_i == pokemon["id"]
-				return pokemon
-			end
-		end
-		return false
-
-	end
-
-	
-
 	# Gets all favorited Pokemon from the database as an Array of Hashes
 	#
 	# RETURNS ASSOCIATIVE ARRAY (HASHES)
@@ -133,11 +116,17 @@ class PokedexSearch < PokedexAll
 		return favorites
 	end
 
+	# This method adds a Pokemon's type ID numbers to an Array
+	#
+	# RETURNS ARRAY
 	def type_id
 		types_id = [self.search_by_name["type1"], self.search_by_name["type2"]]
 		return types_id
 	end
 
+	# This method finds the Pokemon type names matching the type IDs
+	#
+	# RETURNS ASSOCIATIVE ARRAY
 	def type_names
 		types_names = DATABASE.execute("SELECT name FROM types WHERE id='#{self.type_id[0]}' OR id='#{self.type_id[1]}';")
 		return types_names
@@ -196,6 +185,9 @@ class DatabaseEvolutions < PokeapiEvolutions
 		return values
 	end
 
+	# This method checks if a new Pokemon's evolution chain exists in the database
+	#
+	# RETURNS BOOLEAN IF EXISTS
 	def chain_exists?
 		evolution_table = DATABASE.execute("SELECT evolution_id FROM evolutions;")
 		evolution_table.each do |row|
@@ -205,6 +197,9 @@ class DatabaseEvolutions < PokeapiEvolutions
 		end
 	end
 
+	# This method gets the evolution chain from the database
+	#
+	# RETURNS ASSOCIATIVE ARRAY
 	def evolution_chain
 		evolution_chains = DATABASE.execute("SELECT * FROM evolutions WHERE stage1='#{@id.downcase}' OR stage2='#{@id.downcase}' OR stage3='#{@id.downcase}';")
 		binding.pry

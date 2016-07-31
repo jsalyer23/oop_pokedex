@@ -24,17 +24,6 @@ class Pokeapi
 		return @api["id"]
 	end
 
-	# This method adds the abilities to an Array to be used for our API
-	#
-	# RETURNS ARRAY
-	def abilities
-		abilities = []
-		@api["abilities"].each do |i|
-			abilities.push(i["ability"]["name"])
-		end
-		return abilities
-	end
-
 	# This method adds the Pokemon's type(s) to an Array
 	#
 	# RETURNS ARRAY
@@ -46,13 +35,17 @@ class Pokeapi
 		return types
 	end
 
+	# This method matches the type names with the correct type ID
+	#
+	# RETURNS ASSOCIATIVE ARRAY
 	def database_types
 		types_table = DATABASE.execute("SELECT id FROM types WHERE name='#{self.types[0]}' OR name='#{self.types[1]}';")
 		return types_table
 	end
 
-	
-
+	# This method adds the type IDs to an Array
+	#
+	# RETURNS ARRAY
 	def get_type_id
 		type_ids = [self.database_types[0]["id"]]
 
@@ -107,6 +100,8 @@ end
 # This class gathers the evolution stages for a Pokemon, takes in evolution request from API
 class PokeapiEvolutions
 
+	# evolution_request = evolution request from the API
+	# name = Pokemon's name
 	def initialize(evolution_request, name)
 		@api_evolution = evolution_request
 		@name = name
@@ -155,6 +150,9 @@ class PokeapiEvolutions
 		return evolutions
 	end
 
+	# This method checks if a Pokemon evolves or not
+	#
+	# RETURNS BOOLEAN
 	def evolves?
 		if (self.evolutions[0] == @name && self.evolutions[1] == nil) ||
 			(self.evolutions[1] == @name && self.evolutions[2] == nil) ||
