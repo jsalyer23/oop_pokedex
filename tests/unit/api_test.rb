@@ -16,7 +16,7 @@ class ApiTest < Minitest::Test
 	    # Use for evolutions
 	    @evolutions = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{@api_species.evolution_id}")
 	    
-	    @api_evolution = PokeapiEvolutions.new(@evolutions)
+	    @api_evolution = PokeapiEvolutions.new(@evolutions, "")
 		end
 
 
@@ -37,14 +37,6 @@ class ApiTest < Minitest::Test
 	    assert_kind_of(Fixnum, id)
 	    refute_nil(id)
 	  end 
-
-	  def test_abilities
-
-	    ability_array = @api_data.abilities
-
-	    assert_kind_of(Array, ability_array)
-	    refute_nil(ability_array)
-	  end
 
 	  def test_types
 

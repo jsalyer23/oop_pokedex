@@ -132,19 +132,6 @@ class PokedexSearch < PokedexAll
 		return types_names
 	end
 
-	# Adds favorited Pokemon to Array
-	#
-	# RETURNS ARRAY
-	def favorites_array
-		favorites = []
-		@all_pokemon.each do |pokemon|
-			if pokemon[6] == "on"
-				favorites.push(pokemon)
-			end
-		end
-		return favorites
-	end
-
 	def favorites
 		return self.select_favorites
 	end
