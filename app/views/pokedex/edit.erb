@@ -6,9 +6,9 @@
 
 <!-- This form should autofill data from the previous page -->
 <div class="statsContainer">
-	<form action="/view">
-		<input type="hidden" name="name" value= <%= @pokemon["name"] %> />
-		<input type="hidden" name="id" value= <%= @pokemon["id"] %> />
+	<form action="/view/<%= @pokemon["id"] %>/<%= @pokemon["name"] %>">
+		
+		
 		<div class="stats">
 			<div class="stats__title--fixedWidth">
 				Gender:

@@ -5,7 +5,7 @@ MyApp.get "/edit" do
 
 	@pokemon = @selected.search_by_name
 	
-	
 
 	erb :"pokedex/edit"
 end
+

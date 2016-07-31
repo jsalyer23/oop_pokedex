@@ -1,40 +1,10 @@
 MyApp.get "/view" do
 	@title = "Add New Pok&eacute;mon"
-	if params[:gender] != nil
-		@gender = params[:gender]
-		@cp = params[:cp]
-		@hp = params[:hp]
-		@favorite = params[:favorite]
-		@id = params[:id]
-
-		if @favorite == "on"
-			@favorite = true
-		else
-			@favorite = false
-		end
-
-		DATABASE.execute("UPDATE pokemon SET hp=\'#{@hp}\', cp=\'#{@cp}\', gender=\'#{@gender}\', favorite=\'#{@favorite}\' 
-			WHERE id=\'#{@id}\';")
-	end
 
 	@all_pokemon = PokedexAll.new
-
 	@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
 
-	if @existing.search_by_name != nil && @existing.search_by_name != false
-		# Array of traits for an Pokemon that exists to use on View page
-		@pokemon = @existing.search_by_name
-
-		
-		if @existing.type_names[1] != nil
-		@type1 = @existing.type_names[0]["name"]
-		@type2 = ", " + @existing.type_names[1]["name"]
-		else
-			@type1 = @existing.type_names[0]["name"]
-			@type2 = ""
-		end
-
-	elsif @existing.search_by_name == false
+	if @existing.search_by_name == false
 		@name = params[:name].downcase
 		@gender = params[:gender]
 		@cp = params[:cp]
@@ -52,17 +22,12 @@ MyApp.get "/view" do
 		# Use for evolutions
 		@evolutions = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{@api_species.evolution_id}")
 		
-		@api_evolution = PokeapiEvolutions.new(@evolutions)
+		@api_evolution = PokeapiEvolutions.new(@evolutions, @name)
 
 		@id = @api_data.id
 		@height = @api_data.height
 		@weight = @api_data.weight
 		@types_ids = @api_data.get_type_id
-
-		
-		@evolves = ""
-
-
 
 		if @favorite == "on"
 			@favorite = true
@@ -70,14 +35,7 @@ MyApp.get "/view" do
 			@favorite = false
 		end
 
-		# This looks pretty ugly...I should put it in a method and just pass in @api_evolution...
-		if (@api_evolution.evolutions[0] == @name && @api_evolution.evolutions[1] == nil) ||
-			(@api_evolution.evolutions[1] == @name && @api_evolution.evolutions[2] == nil) ||
-			(@api_evolution.evolutions[2] == @name && @api_evolution.evolutions[3] == nil)
-			@evolves = false
-		else
-			@evolves = true
-		end
+		@evolves = @api_evolution.evolves?
 
 		@new_pokemon = Pokemon.new(@id, @name.capitalize, @height, @weight, @gender, @favorite, @hp, @cp, @evolves, @types_ids[0], @types_ids[1])
 		@pokedex = PokedexSave.new(@new_pokemon.traits)
@@ -119,4 +77,90 @@ MyApp.get "/view" do
 
 
 	erb :"pokedex/view"
+end
+
+MyApp.get "/view/:name" do
+	if params[:name] != nil
+
+		@all_pokemon = PokedexAll.new
+
+		@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
+
+		@pokemon = @existing.search_by_name
+		@evolutions = DatabaseEvolutions.new('', @pokemon["name"])
+		@stages = @evolutions.evolution_chain
+
+			if @existing.type_names[1] != nil
+			@type1 = @existing.type_names[0]["name"]
+			@type2 = ", " + @existing.type_names[1]["name"]
+			else
+				@type1 = @existing.type_names[0]["name"]
+				@type2 = ""
+			end
+
+			@stage1 = @stages[0]["stage1"]
+			if @stages[0]["stage2"] != nil
+				@stage2 = @stages[0]["stage2"]
+			else
+				@stage2 = ""
+			end
+
+			if @stages[0]["stage3"] != nil
+				@stage3 = @stages[0]["stage3"]
+			else
+				@stage3 = ""
+			end
+		
+	end
+
+	erb :"pokedex/view"
+end
+
+MyApp.get "/view/:id/:name" do
+	if params[:id] != nil
+		@gender = params[:gender]
+		@cp = params[:cp]
+		@hp = params[:hp]
+		@favorite = params[:favorite]
+		@id = params[:id]
+
+		if @favorite == "on"
+			@favorite = true
+		else
+			@favorite = false
+		end
+
+		DATABASE.execute("UPDATE pokemon SET hp=\'#{@hp}\', cp=\'#{@cp}\', gender=\'#{@gender}\', favorite=\'#{@favorite}\' 
+			WHERE id=\'#{@id}\';")
+	end
+
+	@all_pokemon = PokedexAll.new
+	@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
+	@pokemon = @existing.search_by_name
+	@evolutions = DatabaseEvolutions.new('', @pokemon["name"])
+	@stages = @evolutions.evolution_chain
+
+	if @existing.type_names[1] != nil
+	@type1 = @existing.type_names[0]["name"]
+	@type2 = ", " + @existing.type_names[1]["name"]
+	else
+		@type1 = @existing.type_names[0]["name"]
+		@type2 = ""
+	end
+
+	@stage1 = @stages[0]["stage1"]
+	if @stages[0]["stage2"] != nil
+		@stage2 = @stages[0]["stage2"]
+	else
+		@stage2 = ""
+	end
+
+	if @stages[0]["stage3"] != nil
+		@stage3 = @stages[0]["stage3"]
+	else
+		@stage3 = ""
+	end
+
+	erb :"pokedex/view"
+
 end

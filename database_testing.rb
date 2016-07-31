@@ -4,7 +4,7 @@ require "sqlite3"
 DATABASE = SQLite3::Database.new "pokedex.rb"
 DATABASE.results_as_hash = true
 
-types = DATABASE.execute("SELECT * FROM types WHERE name='Fire' OR name='Pink';")
+evolution_table = DATABASE.execute("SELECT evolution_id FROM evolutions;")
 
 binding.pry
 
