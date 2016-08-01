@@ -120,6 +120,9 @@ class PokedexSearch < PokedexAll
 		return types_names
 	end
 
+	# This method formats the type names to be displayed on the view
+	#
+	# RETURNS ARRAY
 	def display_type_names
 		if self.type_names[1] != nil
 			type1 = self.type_names[0]["name"]
@@ -185,12 +188,18 @@ class DatabaseEvolutions < PokeapiEvolutions
 		return evolution_chains
 	end
 
+	# This method formats the name of the Pokemon's first stage
+	#
+	# RETURNS STRING
 	def stage1
 		stages = self.evolution_chain
 		stage1 = stages[0]["stage1"].capitalize
 		return stage1
 	end
 
+	# This method formats the name of the Pokemon's second stage if it exists
+	#
+	# RETURNS STRING
 	def stage2
 		stages = self.evolution_chain
 		if stages[0]["stage2"] != nil
@@ -201,6 +210,9 @@ class DatabaseEvolutions < PokeapiEvolutions
 		return stage2
 	end
 
+	# This method formats the name of the Pokemon's third stage if it exists
+	#
+	# RETURNS STRING
 	def stage3
 		stages = self.evolution_chain
 		if stages[0]["stage3"] != nil
