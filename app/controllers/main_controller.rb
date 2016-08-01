@@ -1,13 +1,11 @@
 MyApp.get "/" do
 	@title = "Personal Pok&eacute;dex"
-
-	@file = "app/models/pokedex.csv"
 	
-	@pokedex = PokedexAll.new
-	@favorites = PokedexSearch.new("", @pokedex.all_pokemon)
+	@pokedex = PokedexAll.all_pokemon
+	@favorites = PokedexSearch.new('', @pokedex)
 	@random_favorite = @favorites.favorites.sample
 	@no_pokemon_error = "Visit the Add Pokemon page to start building your Pokedex"
-	@existing = PokedexSearch.new(@random_favorite["name"], @pokedex.all_pokemon)
+	@existing = PokedexSearch.new(@random_favorite["name"], @pokedex)
 
 	if @existing.type_names[1] != nil
 		@type1 = @existing.type_names[0]["name"]
@@ -19,9 +17,7 @@ MyApp.get "/" do
 
 	@name = @random_favorite["name"]
 	@height = @random_favorite["height"]
-
 	@weight = @random_favorite["weight"]
-	
 	@gender = @random_favorite["gender"]
 	@cp = @random_favorite["cp"]
 	@hp = @random_favorite["hp"]

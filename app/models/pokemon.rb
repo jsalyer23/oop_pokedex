@@ -1,8 +1,9 @@
 require "httparty"
 require "pry"
 require "json"
-require_relative "database.rb"
+
 require_relative "api.rb"
+require_relative "database_orm.rb"
 
 
 # This class takes in data about a Pokemon, creating a new Pokemon for the Pokedex

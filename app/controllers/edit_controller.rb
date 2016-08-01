@@ -1,6 +1,6 @@
 MyApp.get "/edit" do
-	@all_pokemon = PokedexAll.new
-	@selected = PokedexSearch.new(params[:name], @all_pokemon.all_pokemon)
+	@all_pokemon = PokedexAll.all_pokemon
+	@selected = PokedexSearch.new(params[:name], @all_pokemon)
 	@pokemon = @selected.search_by_name
 
 	erb :"pokedex/edit"
@@ -20,12 +20,11 @@ MyApp.get "/view/:id/:name" do
 			@favorite = false
 		end
 		# Update the selected Pokemon's information in the database
-		DATABASE.execute("UPDATE pokemon SET hp=\'#{@hp}\', cp=\'#{@cp}\', gender=\'#{@gender}\', favorite=\'#{@favorite}\' 
-			WHERE id=\'#{@id}\';")
+		PokedexSave.update_pokemon(@hp, @cp, @gender, @favorite, @id)
 	end
 	# Get all of the Pokemon from the database
-	@all_pokemon = PokedexAll.new
-	@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
+	@all_pokemon = PokedexAll.all_pokemon
+	@existing = PokedexSearch.new(params[:name], @all_pokemon)
 	# Search for the Pokemon by name
 	@pokemon = @existing.search_by_name
 	@evolutions = DatabaseEvolutions.new('', @pokemon["name"])

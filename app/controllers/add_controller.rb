@@ -1,15 +1,13 @@
 MyApp.get "/add" do
 	@title = "Add New Pok&eacute;mon"
-	# @name = params[:name]
-	# @pokemon = HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{@name}")
 	erb :"pokedex/add"
 end
 
 MyApp.get "/view" do
 	@title = "Add New Pok&eacute;mon"
 	# Check if the Pokemon being added already exists
-	@all_pokemon = PokedexAll.new
-	@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
+	@all_pokemon = PokedexAll.all_pokemon
+	@existing = PokedexSearch.new(params[:name], @all_pokemon)
 	# If it doesn't...
 	if @existing.search_by_name == false
 		@name = params[:name].downcase
@@ -19,14 +17,12 @@ MyApp.get "/view" do
 		@favorite = params[:favorite]
 
 		# Use for height and weight and types
-		@pokemon_request = HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{@name}")
-		@api_data = Pokeapi.new(@pokemon_request)
+		@api = ApiRequests.new
+		@api_data = @api.pokemon_request(@name)
 		# Use for evolution id basically
-		@species = HTTParty.get(@api_data.species_url)
-		@api_species = PokeapiSpecies.new(@species)
+		@api_species = @api.species_request(@api_data)
 		# Use for evolutions
-		@evolutions = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{@api_species.evolution_id}")
-		@api_evolution = PokeapiEvolutions.new(@evolutions, @name)
+		@api_evolution	= @api.evolution_request(@api_species)	
 
 		@types_ids = @api_data.get_type_id
 
@@ -45,8 +41,8 @@ MyApp.get "/view" do
 		@db_evolutions = DatabaseEvolutions.new(@api_evolution.evolutions, @api_species.evolution_id)
 		@db_evolutions.save_evolution_table
 		# Create a new search for the newly added Pokemon in the database
-		@all_pokemon = PokedexAll.new
-		@results = PokedexSearch.new(@name.capitalize, @all_pokemon.pokemon_array)
+		@all_pokemon = PokedexAll.all_pokemon
+		@results = PokedexSearch.new(@name.capitalize, @all_pokemon)
 		# Assign the Pokemon's traits to a variable for use in view.erb
 		@pokemon = @results.search_by_name
 		# Create new instance containing evolution table from database

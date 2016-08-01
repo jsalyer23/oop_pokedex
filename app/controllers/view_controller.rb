@@ -1,8 +1,8 @@
 MyApp.get "/view/:name" do
 	if params[:name] != nil
 		# Get all the Pokemon from the database
-		@all_pokemon = PokedexAll.new
-		@existing = PokedexSearch.new(params[:name], @all_pokemon.pokemon_array)
+		@all_pokemon = PokedexAll.all_pokemon
+		@existing = PokedexSearch.new(params[:name], @all_pokemon)
 		# Search for the Pokemon by name
 		@pokemon = @existing.search_by_name
 		@evolutions = DatabaseEvolutions.new('', @pokemon["name"])

@@ -4,10 +4,11 @@ require "sqlite3"
 DATABASE = SQLite3::Database.new "pokedex.rb"
 DATABASE.results_as_hash = true
 
-pokemon = DATABASE.execute("SELECT * FROM evolutions WHERE stage1='squirtle';")
 
+evolution_table = DATABASE.execute("SELECT evolution_id FROM evolutions;")
 binding.pry
-
-puts "didi"
-
-
+		evolution_table.each do |row|
+			if row["evolution_id"] == @id
+				return true
+			end
+		end
