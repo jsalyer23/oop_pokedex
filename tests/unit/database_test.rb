@@ -1,7 +1,7 @@
 
 require 'test_helper'
-
-class SomeClassTest < Minitest::Test
+require "pry"
+class PokedexSearchTest < Minitest::Test
   def setup
     super
 
@@ -10,6 +10,7 @@ class SomeClassTest < Minitest::Test
     @false_results = PokedexSearch.new("Mewtwo", @all_pokemon.all_pokemon)
     @gender_results = PokedexSearch.new("Female", @all_pokemon.all_pokemon)
     @favorites = PokedexSearch.new("", @all_pokemon.all_pokemon)
+    @two_types = PokedexSearch.new("Oddish", @all_pokemon.all_pokemon)
     # This setup will automatically be run before each test below.
   end
 
@@ -21,7 +22,7 @@ class SomeClassTest < Minitest::Test
 
     assert_kind_of(Array, pokedex_pokemon)
     assert_equal(pokedex_pokemon.count, 20)
-
+    refute_nil(pokedex_pokemon)
   end
 
   def test_pokemon_array
@@ -29,6 +30,7 @@ class SomeClassTest < Minitest::Test
 
   	assert_kind_of(Array, pokedex_pokemon)
   	assert_equal(pokedex_pokemon.count, 20)
+  	refute_nil(pokedex_pokemon)
   end
 
   def test_search_by_name
@@ -38,6 +40,7 @@ class SomeClassTest < Minitest::Test
   	assert_equal({"id"=>7, "pokedex_id"=>37, "name"=>"Vulpix", "weight"=>6.0, "height"=>99.0, "gender"=>"Female", "favorite"=>"true", "hp"=>499,
   			"cp"=>89, "date_added"=>"2016-07-29", "evolves"=>"true", "type1"=>"2", "type2"=>"", 0=>7, 1=>37, 2=>"Vulpix", 3=>6.0, 4=>99.0, 5=>"Female",
   			6=>"true", 7=>499, 8=>89, 9=>"2016-07-29", 10=>"true", 11=>"2", 12=>""}, name_results)
+  	refute_nil(name_results)
   end
 
   def test_search_by_name_false
@@ -45,13 +48,15 @@ class SomeClassTest < Minitest::Test
 
   	assert_kind_of(FalseClass, name_results)
   	assert_equal(false, name_results)
+  	refute_nil(name_results)
   end
 
   def test_search_database_for_gender
   	gender_results = @gender_results.search_database
 
   	assert_kind_of(Array, gender_results)
-  	assert_equal(gender_results.count, 12)
+  	assert_equal(11, gender_results.count)
+  	refute_nil(gender_results)
   end
 
   def test_select_favorites
@@ -59,6 +64,59 @@ class SomeClassTest < Minitest::Test
 
   	assert_kind_of(Array, favorites)
   	assert_equal(favorites.count, 10)
+  	refute_nil(favorites)
+  end
+
+  def test_type_ids
+  	type_ids = @search_resuts.type_id
+ 
+  	assert_equal("2", type_ids[0])
+
+  	assert_kind_of(Array, type_ids)
+  	refute_nil(type_ids)
+  end
+
+  def test_type_names
+  	type_names = @search_resuts.type_names
+
+  	assert_equal("Fire", type_names[0]["name"])
+  	assert_kind_of(Array, type_names)
+  	refute_nil(type_names)
+  end
+
+  def test_display_type_names
+  	display_names = @search_results.display_type_names
+
+  	assert_equal("Fire", display_names[0])
+  	assert_kind_of(Array, display_names)
+  	refute_nil(display_names)
+  end
+
+  def test_2_type_ids
+  	two_ids = @two_types.type_id
+
+  	assert_equal("5", two_ids[0])
+  	assert_equal("8", two_ids[1])
+  	assert_kind_of(Array, two_ids)
+  	refute_nil(two_ids)
+  end
+
+  def test_2_type_names
+  	two_names = @two_types.type_names
+
+  	assert_equal("Grass", two_names[0]["name"])
+  	assert_equal("Poison", two_names[1]["name"])
+  	assert_kind_of(Array, two_names)
+  	refute_nil(two_names)
+  end
+
+  def test_show_2_names
+  	two_names = @two_types.display_type_names
+
+  	assert_equal("Grass", two_names[0])
+  	assert_equal(", Poison", two_names[1])
+  	assert_kind_of(Array, two_names)
+  	refute_nil(two_names)
   end
 
 end

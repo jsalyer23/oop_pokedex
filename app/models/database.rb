@@ -76,20 +76,6 @@ class PokedexSearch < PokedexAll
 	# Searches for any matching trait from add Pokemon returned from the database
 	# 
 	# RETURNS ASSOCIATIVE ARRAY (HASHES)
-	def search_all
-		results_array = []
-		found = "no"
-		@all_pokemon.each do |pokemon|
-			pokemon.each do |trait|
-				if pokemon[trait] == @input && found == "no"
-					results_array.push(pokemon)
-					found = "yes"
-				end
-			end
-		end
-		return results_array
-	end
-
 	def search_database
 		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{@input}%'
 			OR gender LIKE '%#{@input}%' OR pokedex_id LIKE '%#{@input}%';")
@@ -121,6 +107,7 @@ class PokedexSearch < PokedexAll
 	# RETURNS ARRAY
 	def type_id
 		types_id = [self.search_by_name["type1"], self.search_by_name["type2"]]
+		 	binding.pry
 		return types_id
 	end
 
@@ -129,19 +116,24 @@ class PokedexSearch < PokedexAll
 	# RETURNS ASSOCIATIVE ARRAY
 	def type_names
 		types_names = DATABASE.execute("SELECT name FROM types WHERE id='#{self.type_id[0]}' OR id='#{self.type_id[1]}';")
+		 	binding.pry
 		return types_names
+	end
+
+	def display_type_names
+		if self.type_names[1] != nil
+			type1 = self.type_names[0]["name"]
+			type2 = ", " + self.type_names[1]["name"]
+		else
+			type1 = self.type_names[0]["name"]
+			type2 = ""
+		end
+		names = [type1, type2]
+		return names
 	end
 
 	def favorites
 		return self.select_favorites
-	end
-
-	def all_results
-		return self.search_all
-	end
-
-	def name_results
-		return self.search_by_name
 	end
 
 end
@@ -189,8 +181,33 @@ class DatabaseEvolutions < PokeapiEvolutions
 	# RETURNS ASSOCIATIVE ARRAY
 	def evolution_chain
 		evolution_chains = DATABASE.execute("SELECT * FROM evolutions WHERE stage1='#{@id.downcase}' OR stage2='#{@id.downcase}' OR stage3='#{@id.downcase}';")
-		binding.pry
 		return evolution_chains
+	end
+
+	def stage1
+		stages = self.evolution_chain
+		stage1 = stages[0]["stage1"]
+		return stage1
+	end
+
+	def stage2
+		stages = self.evolution_chain
+		if stages[0]["stage2"] != nil
+			stage2 = stages[0]["stage2"]
+		else
+			stage2 = ""
+		end
+		return stage2
+	end
+
+	def stage3
+		stages = self.evolution_chain
+		if stages[0]["stage3"] != nil
+			stage3 = stages[0]["stage3"]
+		else
+			stage3 = ""
+		end
+		return stage3
 	end
 
 	# This method saves evolution data to the evolutions table in database
