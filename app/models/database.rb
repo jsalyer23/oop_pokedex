@@ -107,7 +107,7 @@ class PokedexSearch < PokedexAll
 	# RETURNS ARRAY
 	def type_id
 		types_id = [self.search_by_name["type1"], self.search_by_name["type2"]]
-		 	binding.pry
+	
 		return types_id
 	end
 
@@ -116,7 +116,7 @@ class PokedexSearch < PokedexAll
 	# RETURNS ASSOCIATIVE ARRAY
 	def type_names
 		types_names = DATABASE.execute("SELECT name FROM types WHERE id='#{self.type_id[0]}' OR id='#{self.type_id[1]}';")
-		 	binding.pry
+		 	
 		return types_names
 	end
 
@@ -174,6 +174,7 @@ class DatabaseEvolutions < PokeapiEvolutions
 				return true
 			end
 		end
+		return false
 	end
 
 	# This method gets the evolution chain from the database
@@ -186,14 +187,14 @@ class DatabaseEvolutions < PokeapiEvolutions
 
 	def stage1
 		stages = self.evolution_chain
-		stage1 = stages[0]["stage1"]
+		stage1 = stages[0]["stage1"].capitalize
 		return stage1
 	end
 
 	def stage2
 		stages = self.evolution_chain
 		if stages[0]["stage2"] != nil
-			stage2 = stages[0]["stage2"]
+			stage2 = stages[0]["stage2"].capitalize
 		else
 			stage2 = ""
 		end
@@ -203,7 +204,7 @@ class DatabaseEvolutions < PokeapiEvolutions
 	def stage3
 		stages = self.evolution_chain
 		if stages[0]["stage3"] != nil
-			stage3 = stages[0]["stage3"]
+			stage3 = stages[0]["stage3"].capitalize
 		else
 			stage3 = ""
 		end

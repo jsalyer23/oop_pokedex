@@ -22,6 +22,7 @@ class PokemonTest < Minitest::Test
 
     assert_kind_of(Array, pokedex_pokemon)
     assert_equal(20, pokedex_pokemon.count)
+    refute_nil(pokedex_pokemon)
   end
 
   def test_pokemon_array
@@ -29,6 +30,7 @@ class PokemonTest < Minitest::Test
 
     assert_kind_of(Array, pokedex_pokemon)
     assert_equal(20, pokedex_pokemon.count)
+    refute_nil(pokedex_pokemon)
   end
 
 
