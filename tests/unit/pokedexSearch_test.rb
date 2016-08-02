@@ -10,7 +10,7 @@ class PokedexSearchTest < Minitest::Test
     # @false_results = PokedexSearch.new("Mewtwo", @all_pokemon)
     # @gender_results = PokedexSearch.new("Female", @all_pokemon)
     # @favorites = PokedexSearch.new("", @all_pokemon)
-    @two_types = PokedexSearch.new("Oddish", PokedexAll.all_pokemon)
+    @two_types = PokedexSearch.find_by_name("Oddish")
     # This setup will automatically be run before each test below.
   end
 
@@ -25,18 +25,10 @@ class PokedexSearchTest < Minitest::Test
     refute_nil(pokedex_pokemon)
   end
 
-  def test_pokemon_array
-  	pokedex_pokemon = PokedexAll.all_pokemon
-
-  	assert_kind_of(Array, pokedex_pokemon)
-  	assert_equal(pokedex_pokemon.count, 6)
-  	refute_nil(pokedex_pokemon)
-  end
-
   def test_find_by_name
   	name_results = PokedexSearch.find_by_name("Vulpix")
 
-  	assert_kind_of(Array, name_results)
+  	assert_kind_of(Object, name_results)
   	refute_nil(name_results)
   end
 
@@ -52,14 +44,16 @@ class PokedexSearchTest < Minitest::Test
   	gender_results = PokedexSearch.search("Female")
 
   	assert_kind_of(Array, gender_results)
-  	assert_equal(6, gender_results.count)
+    assert_kind_of(Object, gender_results[0])
+  	assert_equal(3, gender_results.count)
   	refute_nil(gender_results)
   end
 
   def test_select_favorites
-  	favorites = PokedexSearch.select_favorites
+  	favorites = PokedexSearch.favorites
 
   	assert_kind_of(Array, favorites)
+    assert_kind_of(Object, favorites[0])
   	assert_equal(favorites.count, 4)
   	refute_nil(favorites)
   end
@@ -74,7 +68,7 @@ class PokedexSearchTest < Minitest::Test
   end
 
   def test_2_type_ids
-  	two_ids = @two_types.type_id("Oddish")
+  	two_ids = @two_types.type_id
 
   	assert_equal(5, two_ids[0])
   	assert_equal(8, two_ids[1])
@@ -83,8 +77,7 @@ class PokedexSearchTest < Minitest::Test
   end
 
   def test_2_type_names
-    two_ids = @two_types.type_id("Oddish")
-  	two_names = @two_types.type_names(two_ids)
+  	two_names = @two_types.type_names
 
   	assert_equal("Grass", two_names[0]["name"])
   	assert_equal("Poison", two_names[1]["name"])

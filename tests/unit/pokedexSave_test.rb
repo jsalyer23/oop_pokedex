@@ -9,8 +9,8 @@ class PokedexSaveTest < Minitest::Test
     end
     
     @pokemon = Pokemon.new(74, 'Geodude', 4, 200, 'Male', true, 299, 78, true, 9, 13)
-    @pokedex = PokedexSave.new(@pokemon.traits)
-    @pokedex.save_to_database
+    @pokedex = PokedexSave.save(@pokemon.traits)
+    
     # @all_pokemon = PokedexAll.all_pokemon
     # @search_results = PokedexSearch.new("Geodude", @all_pokemon)
     # @geodude = @search_results.search_by_name
@@ -23,14 +23,15 @@ class PokedexSaveTest < Minitest::Test
   def test_for_saved_pokemon
     @geodude = PokedexSearch.find_by_name("Geodude")
 
-    assert_kind_of(Array, @geodude)
+    assert_kind_of(Object, @geodude)
     refute_nil(@geodude)
-    assert_equal(6, @geodude[0]["id"])
+    assert_equal(6, @geodude.id)
   end
 
   def test_pokemon_columns
+    new_instance = PokedexSave.new(@pokemon)
   	columns = "pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves, type1, type2"
-  	test = @pokedex.pokemon_columns
+  	test = new_instance.pokemon_columns
 
   	assert_equal(columns, test)
   	assert_kind_of(String, test)
@@ -42,7 +43,8 @@ class PokedexSaveTest < Minitest::Test
   	new_geodude = PokedexSearch.find_by_name("Geodude")
 
   	refute_nil(new_geodude)
-  	assert_equal("Male", new_geodude[0]["gender"])
+  	assert_kind_of(Object, new_geodude)
+  	assert_equal("Male", new_geodude.gender)
   end
 end
 
