@@ -7,6 +7,14 @@ require_relative "database_orm.rb"
 # This class saves new Pokemon to flat storage
 class PokedexSave < Pokemon
 
+	# pokemon = Array returned from Pokemon.traits
+	# file = File to save to
+	def initialize(pokemon=nil)
+		@pokemon = pokemon
+		# @file = file
+		
+	end
+
 	# This method puts all of the columns for the Pokemon table into a string
 	#
 	# RETURNS STRING
@@ -29,7 +37,7 @@ class PokedexSave < Pokemon
 	#
 	# SAVES TO DATABASE (POKEMON TABLE)
 	def self.save(pokemon)
-		instance = PokedexSave.new
+		instance = PokedexSave.new(pokemon)
 		DATABASE.execute("INSERT INTO pokemon (#{instance.pokemon_columns})
 			VALUES #{instance.pokemon_values};")
 	end
