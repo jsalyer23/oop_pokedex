@@ -3,53 +3,65 @@ require "sqlite3"
 
 module Database
 
-	def self.save_pokemon
-		require "sqlite3"
-		DATABASE.execute("INSERT INTO pokemon (#{self.pokemon_columns})
-			VALUES #{self.pokemon_values};")
-	end
-
-	def self.all_pokemon
-		require "sqlite3"
+	def all_pokemon
+		objects_array = []
 		all_pokemon = DATABASE.execute("SELECT * FROM pokemon;")
-		return all_pokemon
-	end
-
-	def self.search_database(input)
-		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{input}%'
-			OR gender LIKE '%#{input}%' OR pokedex_id LIKE '%#{input}%';")
-		return search_results
-	end
-
-	def self.favorites
-		favorites = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
-		return favorites
-	end
-
-	def self.type_names
-		types_names = DATABASE.execute("SELECT name FROM types WHERE id='#{self.type_id[0]}' OR id='#{self.type_id[1]}';")	
-		return types_names
-	end
-
-	def self.chain_exists?
-		evolution_table = DATABASE.execute("SELECT evolution_id FROM evolutions;")
-		evolution_table.each do |row|
-			if row["evolution_id"] == @id.to_i
-				return true
-			end
+		all_pokemon.each do |traits|
+			objects_array << PokedexAll.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
+				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
+				traits["type1"], traits["type2"])
 		end
-		return false
+		return objects_array
 	end
 
-	def self.evolution_chains
-		evolution_chains = DATABASE.execute("SELECT * FROM evolutions WHERE stage1='#{@id.downcase}' OR stage2='#{@id.downcase}' OR stage3='#{@id.downcase}';")
-		return evolution_chains
+	def search(input)
+		object_array = []
+		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{input}%'
+										OR gender LIKE '%#{input}%' OR pokedex_id LIKE '%#{input}%';")
+		search_results.each do |traits|
+			object_array << PokedexSearch.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
+				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
+				traits["type1"], traits["type2"])
+		end
+		object_array
 	end
 
-	def self.save_evolutions
-		require "sqlite3"
-		if self.chain_exists? != true
-			DATABASE.execute("INSERT INTO evolutions (#{self.evolution_columns}) VALUES #{self.evolution_values};")
+	def find_by_name(input)
+		name_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{input}%';")
+		if !name_results.empty?
+			traits = name_results[0]
+			PokedexSearch.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
+				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
+				traits["type1"], traits["type2"])
+		else
+			return false
+		end
+	end
+
+	def favorites
+		favorites_array = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
+		object_array = []
+		favorites_array.each do |traits|
+			object_array << PokedexSearch.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
+				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
+				traits["type1"], traits["type2"])
+		end
+		object_array
+	end
+
+	def evolution_chains(name)
+		evolution_chains = DATABASE.execute("SELECT * FROM evolutions WHERE stage1='#{name.downcase}' OR stage2='#{name.downcase}' OR stage3='#{name.downcase}';")
+		evolutions = evolution_chains[0]
+		Evolutions.new('', '', evolutions["stage1"].capitalize, evolutions["stage2"].capitalize, evolutions["stage3"].capitalize)
+	
+	end
+
+	def save_evolutions(evolutions, id)
+		instance = Evolutions.new(evolutions, id)
+		if self.chain_exists? == false
+			DATABASE.execute("INSERT INTO evolutions (#{instance.evolution_columns}) VALUES #{instance.evolution_values};")
+		else
+			return false
 		end
 	end
 

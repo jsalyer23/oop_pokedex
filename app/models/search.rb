@@ -115,13 +115,3 @@ class PokedexSearch
 
 end
 
-# search_results = PokedexSearch.search("Male")
-# oddish = PokedexSearch.find_by_name("Oddish")
-# type_id = oddish.type_id
-# type_names = oddish.type_names
-# show_names = oddish.display_type_names
-
-# favorites = PokedexSearch.favorites
-# binding.pry
-# puts "maybe it worked maybe it didn't...."
-

@@ -4,12 +4,6 @@ require "pry"
 class PokedexSearchTest < Minitest::Test
   def setup
     super
-
-    # @all_pokemon = PokedexAll.all_pokemon
-    # @search_results = PokedexSearch.new("Vulpix", @all_pokemon)
-    # @false_results = PokedexSearch.new("Mewtwo", @all_pokemon)
-    # @gender_results = PokedexSearch.new("Female", @all_pokemon)
-    # @favorites = PokedexSearch.new("", @all_pokemon)
     @two_types = PokedexSearch.find_by_name("Oddish")
     # This setup will automatically be run before each test below.
   end

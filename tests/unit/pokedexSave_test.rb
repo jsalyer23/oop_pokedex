@@ -11,10 +11,6 @@ class PokedexSaveTest < Minitest::Test
     @pokemon = Pokemon.new(74, 'Geodude', 4, 200, 'Male', true, 299, 78, true, 9, 13)
     @pokedex = PokedexSave.save(@pokemon.traits)
     
-    # @all_pokemon = PokedexAll.all_pokemon
-    # @search_results = PokedexSearch.new("Geodude", @all_pokemon)
-    # @geodude = @search_results.search_by_name
-    # This setup will automatically be run before each test below.
   end
 
   # Your tests are defined here. Tests must be contained in a method

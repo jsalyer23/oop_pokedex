@@ -10,6 +10,8 @@ class Evolutions < PokeapiEvolutions
 	attr_writer :stage1, :stage2, :stage3
 
 	def initialize(evolutions=nil, id=nil, stage1=nil, stage2=nil, stage3=nil)
+		@evolutions = evolutions
+		@id = id
 		@stage1 = stage1
 		@stage2 = stage2
 		@stage3 = stage3
@@ -42,6 +44,7 @@ class Evolutions < PokeapiEvolutions
 			end
 		end
 		return false
+
 	end
 
 	# This method gets the evolution chain from the database
