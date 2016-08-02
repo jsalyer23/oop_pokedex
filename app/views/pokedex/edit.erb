@@ -6,7 +6,7 @@
 
 <!-- This form should autofill data from the previous page -->
 <div class="statsContainer">
-	<form action="/view/<%= @pokemon["id"] %>/<%= @pokemon["name"] %>">
+	<form action="/view/<%= @pokemon.id %>/<%= @pokemon.name %>">
 		
 		
 		<div class="stats">
@@ -14,7 +14,7 @@
 				Gender:
 			</div>
 			<div class="stats__info">
-				<input type="text" name="gender" class="form" value= <%=  @pokemon["gender"] %> autofocus required="">
+				<input type="text" name="gender" class="form" value= <%=  @pokemon.gender %> autofocus required="">
 			</div>
 		</div>
 
@@ -23,7 +23,7 @@
 				CP:
 			</div>
 			<div class="stats__info">
-				<input type="text" name="cp" class="form" value= <%= @pokemon["cp"] %> required="">
+				<input type="text" name="cp" class="form" value= <%= @pokemon.cp %> required="">
 			</div>
 		</div>
 
@@ -32,7 +32,7 @@
 				HP:
 			</div>
 			<div class="stats__info">
-				<input type="text" name="hp" class="form" value= <%= @pokemon["hp"] %> required="">
+				<input type="text" name="hp" class="form" value= <%= @pokemon.hp %> required="">
 			</div>
 		</div>
 
@@ -41,7 +41,7 @@
 				Favorite:
 			</div>
 			<div class="stats__info">
-				<input type="checkbox" name="favorite" <%= @pokemon["favorite"] %>>
+				<input type="checkbox" name="favorite" <%= @pokemon.favorite %>>
 			</div>
 		</div>
 

@@ -6,54 +6,36 @@ end
 MyApp.get "/view" do
 	@title = "Add New Pok&eacute;mon"
 	# Check if the Pokemon being added already exists
-	@all_pokemon = PokedexAll.all_pokemon
-	@existing = PokedexSearch.new(params[:name], @all_pokemon)
+	@existing = PokedexSearch.find_by_name(params[:name])
 	# If it doesn't...
-	if @existing.search_by_name == false
-		@name = params[:name].downcase
-		@gender = params[:gender]
-		@cp = params[:cp]
-		@hp = params[:hp]
-		@favorite = params[:favorite]
-
+	if @existing == false
 		# Use for height and weight and types
 		@api = ApiRequests.new
-		@api_data = @api.pokemon_request(@name)
+		@api_data = @api.pokemon_request(params[:name].downcase)
 		# Use for evolution id basically
 		@api_species = @api.species_request(@api_data)
 		# Use for evolutions
 		@api_evolution	= @api.evolution_request(@api_species)	
-
 		@types_ids = @api_data.get_type_id
-
-		if @favorite == "on"
+		if params[:favorite] == "on"
 			@favorite = true
 		else
 			@favorite = false
 		end
 		# Create a new Pokemon instance containing it's traits
-		@new_pokemon = Pokemon.new(@api_data.id, @name.capitalize, @api_data.height, @api_data.weight, @gender,
-									 @favorite, @hp, @cp, @api_evolution.evolves?, @types_ids[0], @types_ids[1])
+		@new_pokemon = Pokemon.new(@api_data.id, params[:name].capitalize, @api_data.height, @api_data.weight, params[:gender],
+									 @favorite, params[:hp], params[:cp], @api_evolution.evolves?, @types_ids[0], @types_ids[1])
 		# Save new Pokemon to database
-		@pokedex = PokedexSave.new(@new_pokemon.traits)
-		@pokedex.save_to_database
+		PokedexSave.save(@new_pokemon.traits)
 		# Save Pokemon's evolution chain to database unless the chain exists in the database already
-		@db_evolutions = DatabaseEvolutions.new(@api_evolution.evolutions, @api_species.evolution_id)
-		@db_evolutions.save_evolution_table
+		Evolutions.save_evolutions(@api_evolution.evolutions, @api_species.evolution_id)
 		# Create a new search for the newly added Pokemon in the database
-		@all_pokemon = PokedexAll.all_pokemon
-		@results = PokedexSearch.new(@name.capitalize, @all_pokemon)
-		# Assign the Pokemon's traits to a variable for use in view.erb
-		@pokemon = @results.search_by_name
+		@pokemon = PokedexSearch.find_by_name(@name.capitalize)
 		# Create new instance containing evolution table from database
-		@evolutions = DatabaseEvolutions.new('', @pokemon["name"])
+		@evolutions = Evolutions.evolution_chain(@pokemon.name.downcase)
 		# Translate type ids into id names
-		@type1 = @results.display_type_names[0]
-		@type2 = @results.display_type_names[1]
-		# Translate evolution id into stage names
-		@stage1 = @evolutions.stage1
-		@stage2 = @evolutions.stage2
-		@stage3 = @evolutions.stage3
+		@type1 = @pokemon.display_type_names[0]
+		@type2 = @pokemon.display_type_names[1]
 	end
 
 	erb :"pokedex/view"

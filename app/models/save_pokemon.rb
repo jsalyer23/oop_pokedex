@@ -51,14 +51,40 @@ end
 
 # This class retrieves all Pokemon from flat file
 class PokedexAll
-	include Database
+	attr_reader :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2
+	attr_writer :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2
+	
+	def initialize(id=nil, pokedex_id=nil, name=nil, weight=nil, height=nil, gender=nil, favorite=nil, hp=nil, cp=nil,
+				 date_added=nil, evolves=nil, type1=nil, type2=nil)
+		@id = id
+		@pokedex_id = pokedex_id
+		@name = name
+		@weight = weight
+		@height = height
+		@gender = gender
+		@favorite = favorite
+		@hp = hp
+		@cp = cp
+		@date_added = date_added
+		@evolves = evolves
+		@type1 = type1
+		@type2 = type2
+		
+	end
 	# Adds all Pokemon from database into an Array
 	# 
 	# RETURNS ASSOCIATIVE ARRAY (HASHES)
 	def self.all_pokemon
 		require "sqlite3"
+		objects_array = []
 		all_pokemon = DATABASE.execute("SELECT * FROM pokemon;")
-		return all_pokemon
+		all_pokemon.each do |traits|
+			objects_array << PokedexAll.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
+				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
+				traits["type1"], traits["type2"])
+		end
+		return objects_array
+		binding.pry
 	end
 
 end

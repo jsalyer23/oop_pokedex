@@ -21,6 +21,7 @@ class PokedexSearchTest < Minitest::Test
     pokedex_pokemon = PokedexAll.all_pokemon
 
     assert_kind_of(Array, pokedex_pokemon)
+    assert_kind_of(Object, pokedex_pokemon[0])
     assert_equal(pokedex_pokemon.count, 6)
     refute_nil(pokedex_pokemon)
   end

@@ -5,11 +5,14 @@ require_relative "api.rb"
 require_relative "database_orm.rb"
 
 # This class formats and saves evolution data to the database
-class DatabaseEvolutions < PokeapiEvolutions
+class Evolutions < PokeapiEvolutions
+	attr_reader :stage1, :stage2, :stage3
+	attr_writer :stage1, :stage2, :stage3
 
-	def initialize(evolutions, evolution_id)
-		@evolutions = evolutions
-		@id = evolution_id
+	def initialize(evolutions=nil, id=nil, stage1=nil, stage2=nil, stage3=nil)
+		@stage1 = stage1
+		@stage2 = stage2
+		@stage3 = stage3
 	end
 
 	# This method formats the columns in the evolutions table
@@ -24,7 +27,7 @@ class DatabaseEvolutions < PokeapiEvolutions
 	#
 	# RETURNS STRING
 	def evolution_values
-		values = "(\'#{@id}\', \'#{@evolutions[0]}\', \'#{@evolutions[1]}\', \'#{@evolutions[2]}\')"
+		values = "(\'#{id}\', \'#{evolutions[0]}\', \'#{evolutions[1]}\', \'#{evolutions[2]}\')"
 		return values
 	end
 
@@ -43,54 +46,25 @@ class DatabaseEvolutions < PokeapiEvolutions
 
 	# This method gets the evolution chain from the database
 	#
+	# name = Pokemon's name
+	#
 	# RETURNS ASSOCIATIVE ARRAY
-	def evolution_chain
-		evolution_chains = DATABASE.execute("SELECT * FROM evolutions WHERE stage1='#{@id.downcase}' OR stage2='#{@id.downcase}' OR stage3='#{@id.downcase}';")
-		return evolution_chains
-	end
-
-	# This method formats the name of the Pokemon's first stage
-	#
-	# RETURNS STRING
-	def stage1
-		stages = self.evolution_chain
-		stage1 = stages[0]["stage1"].capitalize
-		return stage1
-	end
-
-	# This method formats the name of the Pokemon's second stage if it exists
-	#
-	# RETURNS STRING
-	def stage2
-		stages = self.evolution_chain
-		if stages[0]["stage2"] != nil
-			stage2 = stages[0]["stage2"].capitalize
-		else
-			stage2 = ""
-		end
-		return stage2
-	end
-
-	# This method formats the name of the Pokemon's third stage if it exists
-	#
-	# RETURNS STRING
-	def stage3
-		stages = self.evolution_chain
-		if stages[0]["stage3"] != nil
-			stage3 = stages[0]["stage3"].capitalize
-		else
-			stage3 = ""
-		end
-		return stage3
+	def self.evolution_chain(name)
+		evolution_chains = DATABASE.execute("SELECT * FROM evolutions WHERE stage1='#{name.downcase}' OR stage2='#{name.downcase}' OR stage3='#{name.downcase}';")
+		evolutions = evolution_chains[0]
+		Evolutions.new('', '', evolutions["stage1"].capitalize, evolutions["stage2"].capitalize, evolutions["stage3"].capitalize)
+	
 	end
 
 	# This method saves evolution data to the evolutions table in database
 	#
+	# evolutions = Array returned from PokeapiEvolutions
+	#
 	# SAVES TO DATABASE (EVOLUTIONS TABLE)
-	def save_evolution_table
-		require "sqlite3"
+	def self.save_evolution(evolutions, id)
+		instance = Evolutions.new(evolutions, id)
 		if self.chain_exists? == false
-			DATABASE.execute("INSERT INTO evolutions (#{self.evolution_columns}) VALUES #{self.evolution_values};")
+			DATABASE.execute("INSERT INTO evolutions (#{instance.evolution_columns}) VALUES #{instance.evolution_values};")
 		else
 			return false
 		end

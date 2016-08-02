@@ -9,7 +9,7 @@
 	<% @search_results.each do |pokemon| %>
 	
 	<div class="wrapper">
-	<img class="viewImage" src="/images2/<%= pokemon["name"] %>.png" />
+	<img class="viewImage" src="/images2/<%= pokemon.name %>.png" />
 		
 		
 	<div class="statsContainer">
@@ -19,7 +19,7 @@
 				Name:
 			</div>
 			<div class="stats__info">
-				<%= pokemon["name"] %>
+				<%= pokemon.name %>
 			</div>
 		</div>
 
@@ -28,7 +28,7 @@
 				Height:
 			</div>
 			<div class="stats__info">
-				<%= pokemon["height"] %>
+				<%= pokemon.height %>
 			</div>
 		</div>
 
@@ -37,7 +37,7 @@
 				Weight:
 			</div>
 			<div class="stats__info">
-				<%= pokemon["weight"] %>
+				<%= pokemon.weight %>
 			</div>
 		</div>
 
@@ -46,7 +46,7 @@
 				Gender:
 			</div>
 			<div class="stats__info">
-				<%= pokemon["gender"] %>
+				<%= pokemon.gender %>
 			</div>
 		</div>
 
@@ -64,7 +64,7 @@
 				CP:
 			</div>
 			<div class="stats__info">
-				<%= pokemon["cp"] %>
+				<%= pokemon.cp %>
 			</div>
 		</div>
 
@@ -74,7 +74,7 @@
 				HP:
 			</div>
 			<div class="stats__info">
-				<%= pokemon["hp"] %>
+				<%= pokemon.hp %>
 
 			</div>
 		</div>
@@ -84,7 +84,7 @@
 					Favorite:
 				</div>
 				<div class="stats__info">
-				<% if pokemon["favorite"] == "true" %>
+				<% if pokemon.favorite == "true" %>
 					<img class="favoriteHeart" src="/images2/heart.png" alt="Heart" />
 					<% else %>
 						NO
@@ -95,7 +95,7 @@
 	</div>
 
 	<div class="editText">
-		<a href="/view/<%= pokemon["name"] %>">View Individual Pok&eacute;mon</a>
+		<a href="/view/<%= pokemon.name %>">View Individual Pok&eacute;mon</a>
 	</div>
 </div>
 <%	end 

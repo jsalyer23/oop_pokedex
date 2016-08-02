@@ -30,11 +30,6 @@ class PokedexSearch
 		
 	end
 
-	def pokemon_traits
-		@traits = 'traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"], traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"], traits["type1"], traits["type2"]'
-		return @traits
-	end
-
 	# Searches for any matching trait from a Pokemon returned from the database
 	# 
 	# RETURNS POKEMON OBJECT
