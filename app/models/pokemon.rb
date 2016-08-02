@@ -9,10 +9,12 @@ require_relative "database_orm.rb"
 # This class takes in data about a Pokemon, creating a new Pokemon for the Pokedex
 
 class Pokemon
+	attr_reader :name, :height, :weight, :gender, :type1, :type2, :cp, :hp, :favorite, :pokedex_id, :evolves
+	attr_writer :name, :height, :weight, :gender, :type1, :type2, :cp, :hp, :favorite, :pokedex_id, :evolves
 	# name, cp, hp, favorite, and gender are entered by the user
 	#
 	# height, weight, stages, and types come from the API request
-	def initialize(pokedex_id, name, height, weight, gender, favorite, hp, cp, evolves, type1, type2)
+	def initialize(pokedex_id=nil, name=nil, height=nil, weight=nil, gender=nil, favorite=nil, hp=nil, cp=nil, evolves=nil, type1=nil, type2=nil)
 		@name = name
 		@height = height
 		@weight = weight
@@ -26,13 +28,6 @@ class Pokemon
 		@evolves = evolves
 	end
 
-	# Converts Array into String
-	#
-	# RETURNS STRING
-	def type
-		@type.join(",")
-	end
-
 	# Adds all traits to Array
 	#
 	# RETURNS ARRAY
@@ -44,5 +39,4 @@ class Pokemon
 	end
 
 end
-
 

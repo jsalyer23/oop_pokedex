@@ -34,7 +34,7 @@ module Database
 	def self.chain_exists?
 		evolution_table = DATABASE.execute("SELECT evolution_id FROM evolutions;")
 		evolution_table.each do |row|
-			if row["evolution_id"] == @id
+			if row["evolution_id"] == @id.to_i
 				return true
 			end
 		end

@@ -6,10 +6,11 @@ require_relative "database_orm.rb"
 
 # This class searches all Pokemon from Pokedex
 class PokedexSearch < PokedexAll
-	include Database
+
+	attr_reader :input, :pokemon
 	# input = search input
 	# pokemon = Array of all Pokemon in database (pokedex.rb)
-	def initialize(input, pokemon)
+	def initialize(input=nil, pokemon=nil)
 		@input = input
 		@all_pokemon = pokemon
 	end
@@ -17,32 +18,30 @@ class PokedexSearch < PokedexAll
 	# Searches for any matching trait from add Pokemon returned from the database
 	# 
 	# RETURNS ASSOCIATIVE ARRAY (HASHES)
-	def search_database
+	def PokedexSearch.search(input)
 		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{@input}%'
 			OR gender LIKE '%#{@input}%' OR pokedex_id LIKE '%#{@input}%';")
+
 		return search_results
 	end
 
 	# Searches for specific name
 	#
 	# RETURNS STRING OR FALSE
-
-
-
-	# I think that this will become self.all_pokemon instead? using the module??
-	def search_by_name
-		@all_pokemon.each do |pokemon|
-			if @input.capitalize == pokemon["name"]
-				return pokemon
-			end
+	def PokedexSearch.find_by_name(input)
+		name_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{input}%';")
+		if !name_results.empty?
+			return name_results
+		else
+			return false
 		end
-		return false
+
 	end
 
 	# Gets all favorited Pokemon from the database as an Array of Hashes
 	#
 	# RETURNS ASSOCIATIVE ARRAY (HASHES)
-	def select_favorites
+	def PokedexSearch.select_favorites
 		favorites = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
 		return favorites
 	end
@@ -51,8 +50,8 @@ class PokedexSearch < PokedexAll
 	#
 	# RETURNS ARRAY
 	def type_id
-		types_id = [self.search_by_name["type1"], self.search_by_name["type2"]]
-	
+		types_id = [self.find_by_name["type1"], self.find_by_name["type2"]]
+	binding.pry
 		return types_id
 	end
 

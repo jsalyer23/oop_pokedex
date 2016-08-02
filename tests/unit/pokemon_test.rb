@@ -5,32 +5,37 @@ class PokemonTest < Minitest::Test
   def setup
     super
    
-    @input = "Oddish"
-    @all_pokemon = PokedexAll.new
-    @search = PokedexSearch.new(@input, @all_pokemon.all_pokemon)
-
-
-   
- 
+    @pokemon = Pokemon.new
+    @pokemon.name = "Pidgey"
+    @pokemon.height = 23
+    @pokemon.weight = 44
+    @pokemon.gender = "Male"
+    @pokemon.cp = 22
+    @pokemon.hp = 45
+    @pokemon.favorite = false
+    @pokemon.evolves = true
+    @pokemon.type1 = "Normal"
+    @pokemon.type2 = "Flying"
+    @pokemon.pokedex_id = 24
     # This setup will automatically be run before each test below.
   end
 
-  # -------------PokedexAll TESTS------------------
 
-  def test_all_pokemon
-    pokedex_pokemon = @all_pokemon.all_pokemon
+  def test_new_pokemon
+    pidgey = @pokemon
 
-    assert_kind_of(Array, pokedex_pokemon)
-    assert_equal(5, pokedex_pokemon.count)
-    refute_nil(pokedex_pokemon)
+    assert_equal("Pidgey", pidgey.name)
+    assert_equal("Male", pidgey.gender)
+    assert_kind_of(TrueClass, pidgey.evolves)
+    assert_kind_of(Integer, pidgey.pokedex_id)
   end
 
-  def test_pokemon_array
-    pokedex_pokemon = @all_pokemon.pokemon_array
+  def test_pokemon_traits
+    traits = @pokemon.traits
 
-    assert_kind_of(Array, pokedex_pokemon)
-    assert_equal(5, pokedex_pokemon.count)
-    refute_nil(pokedex_pokemon)
+    assert_kind_of(Array, traits)
+    assert_equal(11, traits.length)
+    assert_equal("Normal", traits[9])
   end
 
 
