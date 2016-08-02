@@ -6,10 +6,10 @@ require_relative "database_orm.rb"
 
 # This class saves new Pokemon to flat storage
 class PokedexSave < Pokemon
-	include Database
+
 	# pokemon = Array returned from Pokemon.traits
 	# file = File to save to
-	def initialize(pokemon)
+	def initialize(pokemon=nil)
 		@pokemon = pokemon
 		# @file = file
 		
@@ -36,10 +36,10 @@ class PokedexSave < Pokemon
 	# This method saves a new Pokemon as a new row in the Pokemon table
 	#
 	# SAVES TO DATABASE (POKEMON TABLE)
-	def save_to_database
-		require "sqlite3"
-		DATABASE.execute("INSERT INTO pokemon (#{self.pokemon_columns})
-			VALUES #{self.pokemon_values};")
+	def self.save(pokemon)
+		instance = PokedexSave.new(pokemon)
+		DATABASE.execute("INSERT INTO pokemon (#{instance.pokemon_columns})
+			VALUES #{instance.pokemon_values};")
 	end
 
 	def self.update_pokemon(hp, cp, gender, favorite, id)
@@ -59,13 +59,6 @@ class PokedexAll
 		require "sqlite3"
 		all_pokemon = DATABASE.execute("SELECT * FROM pokemon;")
 		return all_pokemon
-	end
-
-	# Returns all Pokemon
-	#
-	# RETURNS ARRAY
-	def pokemon_array
-		return self.all_pokemon
 	end
 
 end

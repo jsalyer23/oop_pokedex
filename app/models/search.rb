@@ -4,34 +4,67 @@ require_relative "pokemon.rb"
 require_relative "api.rb"
 require_relative "database_orm.rb"
 
-# This class searches all Pokemon from Pokedex
-class PokedexSearch < PokedexAll
 
-	attr_reader :input, :pokemon
+
+# This class searches all Pokemon from Pokedex
+class PokedexSearch
+	attr_writer :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2
+	attr_reader :input, :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2
 	# input = search input
 	# pokemon = Array of all Pokemon in database (pokedex.rb)
-	def initialize(input=nil, pokemon=nil)
-		@input = input
-		@all_pokemon = pokemon
+	def initialize(id=nil, pokedex_id=nil, name=nil, weight=nil, height=nil, gender=nil, favorite=nil, hp=nil, cp=nil,
+				 date_added=nil, evolves=nil, type1=nil, type2=nil)
+		@id = id
+		@pokedex_id = pokedex_id
+		@name = name
+		@weight = weight
+		@height = height
+		@gender = gender
+		@favorite = favorite
+		@hp = hp
+		@cp = cp
+		@date_added = date_added
+		@evolves = evolves
+		@type1 = type1
+		@type2 = type2
+		
 	end
 
-	# Searches for any matching trait from add Pokemon returned from the database
+	def pokemon_traits
+		@traits = 'traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"], traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"], traits["type1"], traits["type2"]'
+		return @traits
+	end
+
+	# Searches for any matching trait from a Pokemon returned from the database
 	# 
-	# RETURNS ASSOCIATIVE ARRAY (HASHES)
-	def PokedexSearch.search(input)
-		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{@input}%'
-			OR gender LIKE '%#{@input}%' OR pokedex_id LIKE '%#{@input}%';")
+	# RETURNS POKEMON OBJECT
+	def self.search(input)
+		object_array = []
+		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{input}%'
+			OR gender LIKE '%#{input}%' OR pokedex_id LIKE '%#{input}%';")
+		search_results.each do |traits|
 
-		return search_results
+			object_array << PokedexSearch.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
+				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
+				traits["type1"], traits["type2"])
+		end
+		object_array
+
 	end
+
+
 
 	# Searches for specific name
 	#
-	# RETURNS STRING OR FALSE
-	def PokedexSearch.find_by_name(input)
+	# RETURNS POKEMON OBJECT OR FALSE
+	def self.find_by_name(input)
+		instance = PokedexSearch.new
 		name_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{input}%';")
 		if !name_results.empty?
-			return name_results
+			traits = name_results[0]
+			PokedexSearch.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
+				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
+				traits["type1"], traits["type2"])
 		else
 			return false
 		end
@@ -40,18 +73,24 @@ class PokedexSearch < PokedexAll
 
 	# Gets all favorited Pokemon from the database as an Array of Hashes
 	#
-	# RETURNS ASSOCIATIVE ARRAY (HASHES)
-	def PokedexSearch.select_favorites
-		favorites = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
-		return favorites
+	# RETURNS POKEMON OBJECTS
+	def self.favorites
+		favorites_array = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
+		object_array = []
+		favorites_array.each do |traits|
+			object_array << PokedexSearch.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
+				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
+				traits["type1"], traits["type2"])
+		end
+		object_array
 	end
 
 	# This method adds a Pokemon's type ID numbers to an Array
 	#
 	# RETURNS ARRAY
 	def type_id
-		types_id = [self.find_by_name["type1"], self.find_by_name["type2"]]
-	binding.pry
+		types_id = [self.type1, self.type2]
+	
 		return types_id
 	end
 
@@ -79,10 +118,15 @@ class PokedexSearch < PokedexAll
 		return names
 	end
 
-	def favorites
-		return self.select_favorites
-	end
-
 end
 
+# search_results = PokedexSearch.search("Male")
+# oddish = PokedexSearch.find_by_name("Oddish")
+# type_id = oddish.type_id
+# type_names = oddish.type_names
+# show_names = oddish.display_type_names
+
+# favorites = PokedexSearch.favorites
+# binding.pry
+# puts "maybe it worked maybe it didn't...."
 
