@@ -1,10 +1,20 @@
 
 require 'test_helper'
 require "pry"
-class PokedexSearchTest < Minitest::Test
+class PokedexTest < Minitest::Test
   def setup
     super
-    @two_types = PokedexSearch.find_by_name("Oddish")
+    DATABASE.execute("DELETE FROM pokemon;")
+
+    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves, type1, type2)
+     VALUES (7, 'Squirtle', 5, 90, 'Male', 'true', 398, 39, CURRENT_DATE, 'true', 3, ''),
+    (43, 'Oddish', 5, 54, 'Female', 'false', 100, 34, CURRENT_DATE, 'true', 5, 8),
+    (25, 'Pikachu', 4, 60, 'Female', 'true', 99, 58, CURRENT_DATE, 'true', 4, ''),
+    (9, 'Blastoise', 16, 855, 'Male', 'false', 93, 485, CURRENT_DATE, 'false', 3, ''),
+    (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, ''),
+    (74, 'Geodude', 4, 200, 'Male', 'true', 100, 23, CURRENT_DATE, 'true', 9, 13);")
+
+    @two_types = Pokedex.find(2)
     # This setup will automatically be run before each test below.
   end
 
@@ -12,7 +22,7 @@ class PokedexSearchTest < Minitest::Test
   # that begins with test_ or it won't work. An example test:
 
   def test_all_pokemon
-    pokedex_pokemon = PokedexAll.all_pokemon
+    pokedex_pokemon = Pokedex.all_pokemon
 
     assert_kind_of(Array, pokedex_pokemon)
     assert_kind_of(Object, pokedex_pokemon[0])
@@ -21,14 +31,14 @@ class PokedexSearchTest < Minitest::Test
   end
 
   def test_find_by_name
-  	name_results = PokedexSearch.find_by_name("Vulpix")
+  	name_results = Pokedex.find(5)
 
   	assert_kind_of(Object, name_results)
   	refute_nil(name_results)
   end
 
   def test_find_by_name_false
-  	name_results = PokedexSearch.find_by_name("Mewtwo")
+  	name_results = Pokedex.find(8)
 
   	assert_kind_of(FalseClass, name_results)
   	assert_equal(false, name_results)
@@ -36,7 +46,7 @@ class PokedexSearchTest < Minitest::Test
   end
 
   def test_search_database_for_gender
-  	gender_results = PokedexSearch.search("Female")
+  	gender_results = Pokedex.search("Female")
 
   	assert_kind_of(Array, gender_results)
     assert_kind_of(Object, gender_results[0])
@@ -45,7 +55,7 @@ class PokedexSearchTest < Minitest::Test
   end
 
   def test_select_favorites
-  	favorites = PokedexSearch.favorites
+  	favorites = Pokedex.favorites
 
   	assert_kind_of(Array, favorites)
     assert_kind_of(Object, favorites[0])
@@ -54,7 +64,7 @@ class PokedexSearchTest < Minitest::Test
   end
 
   def test_display_type_names
-  	display_names = PokedexSearch.find_by_name("Vulpix")
+  	display_names = Pokedex.find(5)
     display_names = display_names.display_type_names
 
   	assert_equal("Fire", display_names[0])

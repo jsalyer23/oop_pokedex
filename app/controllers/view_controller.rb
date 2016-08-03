@@ -1,7 +1,7 @@
-MyApp.get "/view/:name" do
-	if params[:name] != nil
+MyApp.get "/view/:id" do
+	if params[:id] != nil
 
-		@pokemon = PokedexSearch.find_by_name(params[:name])	
+		@pokemon = Pokedex.find(params[:id])	
 		@evolutions = Evolutions.evolution_chain(@pokemon.name.downcase)
 		# Translate type ids into id names
 		@type1 = @pokemon.display_type_names[0]

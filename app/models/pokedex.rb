@@ -67,9 +67,8 @@ class Pokedex
 	# Searches for specific name
 	#
 	# RETURNS POKEMON OBJECT OR FALSE
-	def self.find_by_name(input)
-		instance = Pokedex.new
-		name_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{input}%';")
+	def self.find(id)
+		name_results = DATABASE.execute("SELECT * FROM pokemon WHERE id LIKE '%#{id}%';")
 		if !name_results.empty?
 			traits = name_results[0]
 			Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
@@ -100,7 +99,6 @@ class Pokedex
 	# RETURNS ARRAY
 	def type_id
 		types_id = [self.type1, self.type2]
-	
 		return types_id
 	end
 
@@ -108,8 +106,7 @@ class Pokedex
 	#
 	# RETURNS ASSOCIATIVE ARRAY
 	def type_names
-		types_names = DATABASE.execute("SELECT name FROM types WHERE id='#{self.type_id[0]}' OR id='#{self.type_id[1]}';")
-		 	
+		types_names = DATABASE.execute("SELECT name FROM types WHERE id='#{self.type_id[0]}' OR id='#{self.type_id[1]}';") 	
 		return types_names
 	end
 

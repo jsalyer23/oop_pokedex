@@ -1,104 +1,114 @@
-require 'test_helper'
+# require 'test_helper'
 
 
-class ApiTest < Minitest::Test
-	  def setup
-	    super
+# class ApiTest < Minitest::Test
+# 	  def setup
+# 	    super
 
-		@name = "gloom"
-	    @pokemon_data = HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{@name}")
-	    @api_data = Pokeapi.new(@pokemon_data)
+# 	DATABASE.execute("DELETE FROM pokemon;")
 
-	    #Use for evolution id basically
-	    @species = HTTParty.get(@api_data.species_url)
+#     DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves, type1, type2)
+#      VALUES (7, 'Squirtle', 5, 90, 'Male', 'true', 398, 39, CURRENT_DATE, 'true', 3, ''),
+#     (43, 'Oddish', 5, 54, 'Female', 'false', 100, 34, CURRENT_DATE, 'true', 5, 8),
+#     (25, 'Pikachu', 4, 60, 'Female', 'true', 99, 58, CURRENT_DATE, 'true', 4, ''),
+#     (9, 'Blastoise', 16, 855, 'Male', 'false', 93, 485, CURRENT_DATE, 'false', 3, ''),
+#     (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, ''),
+#     (74, 'Geodude', 4, 200, 'Male', 'true', 100, 23, CURRENT_DATE, 'true', 9, 13);")
+
+# 		@name = "gloom"
+# 	    @pokemon_data = HTTParty.get("http://pokeapi.co/api/v2/pokemon/#{@name}")
+# 	    @api_data = Pokeapi.new(@pokemon_data)
+
+# 	    #Use for evolution id basically
+# 	    @species = HTTParty.get(@api_data.species_url)
 	    
-	    @api_species = PokeapiSpecies.new(@species)
-	    # Use for evolutions
-	    @evolutions = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{@api_species.evolution_id}")
+# 	    @api_species = PokeapiSpecies.new(@species)
+# 	    # Use for evolutions
+# 	    @evolutions = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{@api_species.evolution_id}")
 	    
-	    @api_evolution = PokeapiEvolutions.new(@evolutions, "")
-		end
+# 	    @api_evolution = PokeapiEvolutions.new(@evolutions, "")
+# 		end
 
 
-	      # -------------Pokeapi TESTS------------------
+# 	      # -------------Pokeapi TESTS------------------
 
-	  def test_species_url
+# 	  def test_species_url
 	    
-	    species_url = @api_data.species_url
+# 	    species_url = @api_data.species_url
 
-	    assert_kind_of(String, species_url)
-	    refute_nil(species_url)
-	  end
+# 	    assert_kind_of(String, species_url)
+# 	    refute_nil(species_url)
+# 	  end
 
-	  def test_pokemon_id
+# 	  def test_pokemon_id
 
-	    id = @api_data.id
+# 	    id = @api_data.id
 
-	    assert_kind_of(Fixnum, id)
-	    refute_nil(id)
-	  end 
+# 	    assert_kind_of(Fixnum, id)
+# 	    refute_nil(id)
+# 	  end 
 
-	  def test_types
+# 	  def test_types
 
-	    types_array = @api_data.types
+# 	    types_array = @api_data.types
 
-	    assert_kind_of(Array, types_array)
-	    refute_nil(types_array)
-	  end
+# 	    assert_kind_of(Array, types_array)
+# 	    refute_nil(types_array)
+# 	  end
 
-	  def test_height
+# 	  def test_height
 
-	    height = @api_data.height
+# 	    height = @api_data.height
 
-	    assert_kind_of(Fixnum, height)
-	    refute_nil(height)
-	  end
+# 	    assert_kind_of(Fixnum, height)
+# 	    refute_nil(height)
+# 	  end
 
-	  def test_weight
+# 	  def test_weight
 
-	    weight = @api_data.weight
+# 	    weight = @api_data.weight
 
-	    assert_kind_of(Fixnum, weight)
-	    refute_nil(weight)
-	  end
+# 	    assert_kind_of(Fixnum, weight)
+# 	    refute_nil(weight)
+# 	  end
 
-	  # -------------PokeapiSpecies TESTS------------------
+# 	  # -------------PokeapiSpecies TESTS------------------
 
-	  def test_evolution_url
-	  	url = @api_species.evolution_url
+# 	  def test_evolution_url
+# 	  	url = @api_species.evolution_url
 
-	  	assert_kind_of(String, url)
-	  	refute_nil(url)
-	  end
+# 	  	assert_kind_of(String, url)
+# 	  	refute_nil(url)
+# 	  end
 
-	  def test_evolution_id
-	  	id = @api_species.evolution_id
+# 	  def test_evolution_id
+# 	  	id = @api_species.evolution_id
 
-	  	assert_kind_of(String, id)
-	  	refute_nil(id)
-	  end
+# 	  	assert_kind_of(String, id)
+# 	  	refute_nil(id)
+# 	  end
 
-	  # -------------PokeapiEvolutions TESTS------------------
+# 	  # -------------PokeapiEvolutions TESTS------------------
 
-	  def test_stage1
-	  	stage1 = @api_evolution.stage1
+# 	  def test_stage1
+# 	  	stage1 = @api_evolution.stage1
 
-	  	assert_kind_of(String, stage1)
-	  	refute_nil(stage1)
-	  end
+# 	  	assert_kind_of(String, stage1)
+# 	  	refute_nil(stage1)
+# 	  end
 
-	  def test_stage2
-	  	stage2 = @api_evolution.stage2
+# 	  def test_stage2
+# 	  	stage2 = @api_evolution.stage2
 
-	  	assert_kind_of(String, stage2)
-	  	refute_nil(stage2)
-	  end
+# 	  	assert_kind_of(String, stage2)
+# 	  	refute_nil(stage2)
+# 	  end
 
-	  def test_stage3
-	  	stage3 = @api_evolution.stage3
+# 	  def test_stage3
+# 	  	stage3 = @api_evolution.stage3
 
-	  	assert_kind_of(String, stage3)
-	  	refute_nil(stage3)
-	  end
+# 	  	assert_kind_of(String, stage3)
+# 	  	refute_nil(stage3)
+# 	  end
 
-end
+# end
