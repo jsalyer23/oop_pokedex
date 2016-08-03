@@ -7,9 +7,8 @@ MyApp.get "/view" do
 	@title = "Add New Pok&eacute;mon"
 	# Check if the Pokemon being added already exists
 	@search = Pokedex.search(params[:name])
-	@existing = @search[0]
 	# If it doesn't...
-	if @existing == false
+	if @search[0] == nil
 		# Use for height and weight and types
 		@api = ApiRequests.new
 		@api_data = @api.pokemon_request(params[:name].downcase)
@@ -28,12 +27,9 @@ MyApp.get "/view" do
 		@new_pokemon = Pokemon.new('', @api_data.id, params[:name].capitalize, @api_data.height, @api_data.weight, params[:gender],
 									 @favorite, params[:hp], params[:cp], @api_evolution.evolves?, @types_ids[0], @types_ids[1])
 		# Save new Pokemon to database
-		Pokemon.save(@new_pokemon)
+		@pokemon = Pokemon.save(@new_pokemon)
 		# Save Pokemon's evolution chain to database unless the chain exists in the database already
 		Evolutions.save_evolution(@api_evolution.evolutions, @api_species.evolution_id)
-		# Create a new search for the newly added Pokemon in the database
-		@pokemon = Pokedex.find(@new_pokemon.id)
-		binding.pry
 		# Create new instance containing evolution table from database
 		@evolutions = Evolutions.evolution_chain(@pokemon.name.downcase)
 		# Translate type ids into id names
