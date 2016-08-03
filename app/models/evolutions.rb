@@ -44,7 +44,6 @@ class Evolutions < PokeapiEvolutions
 			end
 		end
 		return false
-
 	end
 
 	# This method gets the evolution chain from the database
@@ -56,7 +55,6 @@ class Evolutions < PokeapiEvolutions
 		evolution_chains = DATABASE.execute("SELECT * FROM evolutions WHERE stage1='#{name.downcase}' OR stage2='#{name.downcase}' OR stage3='#{name.downcase}';")
 		evolutions = evolution_chains[0]
 		Evolutions.new('', '', evolutions["stage1"].capitalize, evolutions["stage2"].capitalize, evolutions["stage3"].capitalize)
-	
 	end
 
 	# This method saves evolution data to the evolutions table in database

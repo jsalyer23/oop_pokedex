@@ -13,7 +13,9 @@ class PokemonSaveTest < Minitest::Test
     (9, 'Blastoise', 16, 855, 'Male', 'false', 93, 485, CURRENT_DATE, 'false', 3, ''),
     (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, '');")
     
-    @pokemon = Pokemon.new('', 74, 'Geodude', 4, 200, 'Male', true, 299, 78, true, 9, 13)
+    pokehash = {"id" => "", "name" => "Geodude", "height" => 4, "weight" => 200, "gender" => "Male", "cp" => 221, "hp" => 45,
+    "favorite" => true, "evolves" => true, "type1" => 9, "type2" => 13, "pokedex_id" => 74}
+    @pokemon = Pokemon.new(pokehash)
     @pokedex = Pokemon.save(@pokemon)
   end
 
@@ -29,7 +31,8 @@ class PokemonSaveTest < Minitest::Test
   end
 
   def test_updating_pokemon
-  	Pokemon.update(100, 23, 'Male', true, 6)
+    update_hash = {"cp" => 100, "hp" => 23, "gender" => 'Male', "favorite" => true, "id" => 6}
+  	Pokemon.update(update_hash)
   	new_geodude = Pokedex.find(6)
 
   	refute_nil(new_geodude)

@@ -15,18 +15,9 @@ class PokemonTest < Minitest::Test
     (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, ''),
     (74, 'Geodude', 4, 200, 'Male', 'true', 100, 23, CURRENT_DATE, 'true', 9, 13);")
    
-    @pokemon = Pokemon.new
-    @pokemon.name = "Pidgey"
-    @pokemon.height = 23
-    @pokemon.weight = 44
-    @pokemon.gender = "Male"
-    @pokemon.cp = 22
-    @pokemon.hp = 45
-    @pokemon.favorite = false
-    @pokemon.evolves = true
-    @pokemon.type1 = "Normal"
-    @pokemon.type2 = "Flying"
-    @pokemon.pokedex_id = 24
+    traits_hash = {"id" => "", "name" => "Pidgey", "height" => 23, "weight" => 44, "gender" => "Male", "cp" => 22, "hp" => 45,
+                    "favorite" => false, "evolves" => true, "type1" => "Normal", "type2" => "Flying", "pokedex_id" => 24}
+    @pokemon = Pokemon.new(traits_hash)
     # This setup will automatically be run before each test below.
   end
 
