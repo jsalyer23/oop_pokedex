@@ -26,6 +26,7 @@ class Pokemon
 		@favorite = favorite
 		@pokedex_id = pokedex_id
 		@evolves = evolves
+		# @pokemon = pokemon
 	end
 
 	# Adds all traits to Array
@@ -36,6 +37,21 @@ class Pokemon
 		pokemon.push(@pokedex_id, @name, @height, @weight, @gender,
 			@favorite, @hp, @cp, @evolves, @type1, @type2)
 		return pokemon
+	end
+
+	# This method saves a new Pokemon as a new row in the Pokemon table
+	#
+	# SAVES TO DATABASE (POKEMON TABLE)
+	def self.save(pokemon)
+		DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves, type1, type2)
+			VALUES (\'#{pokemon.pokedex_id}\', \'#{pokemon.name}\', \'#{pokemon.height}\', \'#{pokemon.weight}\',
+				\'#{pokemon.gender}\', \'#{pokemon.favorite}\', \'#{pokemon.hp}\', \'#{pokemon.cp}\', CURRENT_DATE,
+				\'#{pokemon.evolves}\', \'#{pokemon.type1}\', \'#{pokemon.type2}\');")
+	end
+
+	def self.update(hp, cp, gender, favorite, id)
+		DATABASE.execute("UPDATE pokemon SET hp=\'#{hp}\', cp=\'#{cp}\', gender=\'#{gender}\', favorite=\'#{favorite}\' 
+			WHERE id=\'#{id}\';")
 	end
 
 end
