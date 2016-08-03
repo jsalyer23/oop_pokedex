@@ -4,8 +4,8 @@ require_relative "pokemon.rb"
 require_relative "api.rb"
 require_relative "database_orm.rb"
 
-# This class saves new Pokemon to flat storage
-class PokedexSave < Pokemon
+# This class saves new Pokemon to database storage
+class PokedexSave
 
 	# pokemon = Array returned from Pokemon.traits
 	# file = File to save to
