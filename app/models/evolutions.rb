@@ -29,7 +29,7 @@ class Evolutions < PokeapiEvolutions
 	#
 	# RETURNS STRING
 	def evolution_values
-		values = "(\'#{id}\', \'#{evolutions[0]}\', \'#{evolutions[1]}\', \'#{evolutions[2]}\')"
+		values = "(\'#{@id}\', \'#{@evolutions[0]}\', \'#{@evolutions[1]}\', \'#{@evolutions[2]}\')"
 		return values
 	end
 
@@ -66,7 +66,7 @@ class Evolutions < PokeapiEvolutions
 	# SAVES TO DATABASE (EVOLUTIONS TABLE)
 	def self.save_evolution(evolutions, id)
 		instance = Evolutions.new(evolutions, id)
-		if self.chain_exists? == false
+		if instance.chain_exists? == false
 			DATABASE.execute("INSERT INTO evolutions (#{instance.evolution_columns}) VALUES #{instance.evolution_values};")
 		else
 			return false

@@ -29,9 +29,9 @@ class ApiRequests
 	# species = Array returned from species_request()
 	#
 	# RETURNS ASSOCIATIVE ARRAY (CONVERTED JSON)
-	def evolution_request(species)
-		evolution_request = @evolutions = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{species.evolution_id}")
-		evolutions = PokeapiEvolutions.new(evolution_request, @name)
+	def evolution_request(species, name)
+		evolution_request = HTTParty.get("http://pokeapi.co/api/v2/evolution-chain/#{species.evolution_id}")
+		evolutions = PokeapiEvolutions.new(evolution_request, name)
 		return evolutions
 	end
 end

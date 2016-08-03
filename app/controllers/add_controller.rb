@@ -15,7 +15,8 @@ MyApp.get "/view" do
 		# Use for evolution id basically
 		@api_species = @api.species_request(@api_data)
 		# Use for evolutions
-		@api_evolution	= @api.evolution_request(@api_species)	
+		@api_evolution	= @api.evolution_request(@api_species, params[:name].downcase)
+
 		@types_ids = @api_data.get_type_id
 		if params[:favorite] == "on"
 			@favorite = true
@@ -28,9 +29,10 @@ MyApp.get "/view" do
 		# Save new Pokemon to database
 		PokedexSave.save(@new_pokemon.traits)
 		# Save Pokemon's evolution chain to database unless the chain exists in the database already
-		Evolutions.save_evolutions(@api_evolution.evolutions, @api_species.evolution_id)
+		Evolutions.save_evolution(@api_evolution.evolutions, @api_species.evolution_id)
 		# Create a new search for the newly added Pokemon in the database
-		@pokemon = PokedexSearch.find_by_name(@name.capitalize)
+		@pokemon = PokedexSearch.find_by_name(params[:name].capitalize)
+		binding.pry
 		# Create new instance containing evolution table from database
 		@evolutions = Evolutions.evolution_chain(@pokemon.name.downcase)
 		# Translate type ids into id names
