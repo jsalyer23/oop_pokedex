@@ -5,16 +5,17 @@ class PokedexTest < Minitest::Test
   def setup
     super
     DATABASE.execute("DELETE FROM pokemon;")
+    DATABASE.execute("DELETE FROM evolutions;")
+    DATABASE.execute("INSERT INTO evolutions (evolution_id, stage1, stage2, stage3) VALUES (3, 'squirtle', 'wartortle', 'blastoise');")
+    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, height, weight, gender, favorite, hp, cp, date_added, evolves, type1, type2, evolution_id)
+     VALUES (7, 'Squirtle', 5, 90, 'Male', 'true', 398, 39, CURRENT_DATE, 'true', 3, '', 3),
+    (43, 'Oddish', 5, 54, 'Female', 'false', 100, 34, CURRENT_DATE, 'true', 5, 8, ''),
+    (25, 'Pikachu', 4, 60, 'Female', 'true', 99, 58, CURRENT_DATE, 'true', 4, '', ''),
+    (9, 'Blastoise', 16, 855, 'Male', 'false', 93, 485, CURRENT_DATE, 'false', 3, '', 3),
+    (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, '', ''),
+    (74, 'Geodude', 4, 200, 'Male', 'true', 100, 23, CURRENT_DATE, 'true', 9, 13, '');")
 
-    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, height, weight, gender, favorite, hp, cp, date_added, evolves, type1, type2)
-     VALUES (7, 'Squirtle', 5, 90, 'Male', 'true', 398, 39, CURRENT_DATE, 'true', 3, ''),
-    (43, 'Oddish', 5, 54, 'Female', 'false', 100, 34, CURRENT_DATE, 'true', 5, 8),
-    (25, 'Pikachu', 4, 60, 'Female', 'true', 99, 58, CURRENT_DATE, 'true', 4, ''),
-    (9, 'Blastoise', 16, 855, 'Male', 'false', 93, 485, CURRENT_DATE, 'false', 3, ''),
-    (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, ''),
-    (74, 'Geodude', 4, 200, 'Male', 'true', 100, 23, CURRENT_DATE, 'true', 9, 13);")
-
-    @two_types = Pokedex.find(2)
+    
     # This setup will automatically be run before each test below.
   end
 
@@ -23,7 +24,7 @@ class PokedexTest < Minitest::Test
 
   def test_all_pokemon
     pokedex_pokemon = Pokedex.all_pokemon
-
+binding.pry
     assert_kind_of(Array, pokedex_pokemon)
     assert_kind_of(Object, pokedex_pokemon[0])
     assert_equal(pokedex_pokemon.count, 6)
@@ -31,14 +32,14 @@ class PokedexTest < Minitest::Test
   end
 
   def test_find_by_name
-  	name_results = Pokedex.find(5)
+  	name_results = Pokedex.find({"id" => 5})
 
   	assert_kind_of(Object, name_results)
   	refute_nil(name_results)
   end
 
   def test_find_by_name_false
-  	name_results = Pokedex.find(8)
+  	name_results = Pokedex.find({"id" => 8})
 
   	assert_kind_of(FalseClass, name_results)
   	assert_equal(false, name_results)
@@ -46,7 +47,7 @@ class PokedexTest < Minitest::Test
   end
 
   def test_search_database_for_gender
-  	gender_results = Pokedex.search("Female")
+  	gender_results = Pokedex.search({"gender" => "Female"})
 
   	assert_kind_of(Array, gender_results)
     assert_kind_of(Object, gender_results[0])
@@ -64,7 +65,7 @@ class PokedexTest < Minitest::Test
   end
 
   def test_display_type_names
-  	display_names = Pokedex.find(5)
+  	display_names = Pokedex.find({"id" => 5})
     display_names = display_names.display_type_names
 
   	assert_equal("Fire", display_names[0])
@@ -73,6 +74,7 @@ class PokedexTest < Minitest::Test
   end
 
   def test_2_type_ids
+    @two_types = Pokedex.find({"id" => 2})
   	two_ids = @two_types.type_id
 
   	assert_equal(5, two_ids[0])
@@ -82,6 +84,7 @@ class PokedexTest < Minitest::Test
   end
 
   def test_2_type_names
+    @two_types = Pokedex.find({"id" => 2})
   	two_names = @two_types.type_names
 
   	assert_equal("Grass", two_names[0]["name"])
@@ -91,6 +94,7 @@ class PokedexTest < Minitest::Test
   end
 
   def test_show_2_names
+    @two_types = Pokedex.find({"id" => 2})
   	two_names = @two_types.display_type_names
 
   	assert_equal("Grass", two_names[0])

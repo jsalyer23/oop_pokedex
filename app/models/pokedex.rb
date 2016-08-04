@@ -8,25 +8,28 @@ require_relative "database_orm.rb"
 
 # This class searches all Pokemon from Pokedex
 class Pokedex
-	attr_writer :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2
-	attr_reader :input, :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2
+	include InstanceMethods
+	attr_accessor :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2, :evolution_id
+	attr_reader :input
+	TABLE = "pokemon"
+	SELECTOR = "id"
 	# input = search input
 	# pokemon = Array of all Pokemon in database (pokedex.rb)
-	def initialize(id=nil, pokedex_id=nil, name=nil, weight=nil, height=nil, gender=nil, favorite=nil, hp=nil, cp=nil,
-				 date_added=nil, evolves=nil, type1=nil, type2=nil)
-		@id = id
-		@pokedex_id = pokedex_id
-		@name = name
-		@weight = weight
-		@height = height
-		@gender = gender
-		@favorite = favorite
-		@hp = hp
-		@cp = cp
-		@date_added = date_added
-		@evolves = evolves
-		@type1 = type1
-		@type2 = type2
+	def initialize(attrs=nil)
+		@id = attrs["id"]
+		@pokedex_id = attrs["pokedex_id"]
+		@name = attrs["name"]
+		@weight = attrs["weight"]
+		@height = attrs["height"]
+		@gender = attrs["gender"]
+		@favorite = attrs["favorite"]
+		@hp = attrs["hp"]
+		@cp = attrs["cp"]
+		@date_added = attrs["date_added"]
+		@evolves = attrs["evolves"]
+		@type1 = attrs["type1"]
+		@type2 = attrs["type2"]
+		@evolution_id = attrs["evolution_id"]
 		
 	end
 
@@ -37,10 +40,11 @@ class Pokedex
 		require "sqlite3"
 		objects_array = []
 		all_pokemon = DATABASE.execute("SELECT * FROM pokemon;")
+
 		all_pokemon.each do |traits|
 			objects_array << Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
 				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
-				traits["type1"], traits["type2"])
+				traits["type1"], traits["type2"], traits["evolution_id"])
 		end
 		return objects_array
 	end
@@ -56,7 +60,7 @@ class Pokedex
 
 			object_array << Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
 				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
-				traits["type1"], traits["type2"])
+				traits["type1"], traits["type2"], traits["evolution_id"])
 		end
 		object_array
 
@@ -68,12 +72,13 @@ class Pokedex
 	#
 	# RETURNS POKEMON OBJECT OR FALSE
 	def self.find(id)
-		name_results = DATABASE.execute("SELECT * FROM pokemon WHERE id LIKE '%#{id}%';")
+		name_results = DATABASE.execute("SELECT * FROM #{TABLE} WHERE #{SELECTOR} LIKE '%#{id['id']}%';")
 		if !name_results.empty?
 			traits = name_results[0]
 			Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
 				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
-				traits["type1"], traits["type2"])
+				traits["type1"], traits["type2"], traits["evolution_id"])
+			binding.pry
 		else
 			return false
 		end
@@ -89,40 +94,9 @@ class Pokedex
 		favorites_array.each do |traits|
 			object_array << Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
 				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
-				traits["type1"], traits["type2"])
+				traits["type1"], traits["type2"], traits["evolution_id"])
 		end
 		object_array
-	end
-
-	# This method adds a Pokemon's type ID numbers to an Array
-	#
-	# RETURNS ARRAY
-	def type_id
-		types_id = [self.type1, self.type2]
-		return types_id
-	end
-
-	# This method finds the Pokemon type names matching the type IDs
-	#
-	# RETURNS ASSOCIATIVE ARRAY
-	def type_names
-		types_names = DATABASE.execute("SELECT name FROM types WHERE id='#{self.type_id[0]}' OR id='#{self.type_id[1]}';") 	
-		return types_names
-	end
-
-	# This method formats the type names to be displayed on the view
-	#
-	# RETURNS ARRAY
-	def display_type_names
-		if self.type_names[1] != nil
-			type1 = self.type_names[0]["name"]
-			type2 = ", " + self.type_names[1]["name"]
-		else
-			type1 = self.type_names[0]["name"]
-			type2 = ""
-		end
-		names = [type1, type2]
-		return names
 	end
 
 end
