@@ -6,7 +6,7 @@ class PokemonSaveTest < Minitest::Test
     super
     DATABASE.execute("DELETE FROM pokemon;")
 
-    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves, type1, type2)
+    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, height, weight, gender, favorite, hp, cp, date_added, evolves, type1, type2)
      VALUES (7, 'Squirtle', 5, 90, 'Male', 'true', 398, 39, CURRENT_DATE, 'true', 3, ''),
     (43, 'Oddish', 5, 54, 'Female', 'false', 100, 34, CURRENT_DATE, 'true', 5, 8),
     (25, 'Pikachu', 4, 60, 'Female', 'true', 99, 58, CURRENT_DATE, 'true', 4, ''),
@@ -15,7 +15,9 @@ class PokemonSaveTest < Minitest::Test
     
     pokehash = {"id" => "", "name" => "Geodude", "height" => 4, "weight" => 200, "gender" => "Male", "cp" => 221, "hp" => 45,
     "favorite" => true, "evolves" => true, "type1" => 9, "type2" => 13, "pokedex_id" => 74}
-    @pokemon = Pokemon.new(pokehash)
+
+
+    @pokemon = Pokemon.new('', 74, "Geodude", 4, 200, "Male", true, 45, 221, true, 9, 13)
     @pokedex = Pokemon.save(@pokemon)
   end
 
@@ -32,7 +34,7 @@ class PokemonSaveTest < Minitest::Test
 
   def test_updating_pokemon
     update_hash = {"cp" => 100, "hp" => 23, "gender" => 'Male', "favorite" => true, "id" => 6}
-  	Pokemon.update(update_hash)
+  	Pokemon.update(100, 23, 'Male', true, 6)
   	new_geodude = Pokedex.find(6)
 
   	refute_nil(new_geodude)

@@ -7,7 +7,7 @@ class PokemonTest < Minitest::Test
 
     DATABASE.execute("DELETE FROM pokemon;")
 
-    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, weight, height, gender, favorite, hp, cp, date_added, evolves, type1, type2)
+    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, height, weight, gender, favorite, hp, cp, date_added, evolves, type1, type2)
      VALUES (7, 'Squirtle', 5, 90, 'Male', 'true', 398, 39, CURRENT_DATE, 'true', 3, ''),
     (43, 'Oddish', 5, 54, 'Female', 'false', 100, 34, CURRENT_DATE, 'true', 5, 8),
     (25, 'Pikachu', 4, 60, 'Female', 'true', 99, 58, CURRENT_DATE, 'true', 4, ''),
@@ -17,7 +17,7 @@ class PokemonTest < Minitest::Test
    
     traits_hash = {"id" => "", "name" => "Pidgey", "height" => 23, "weight" => 44, "gender" => "Male", "cp" => 22, "hp" => 45,
                     "favorite" => false, "evolves" => true, "type1" => "Normal", "type2" => "Flying", "pokedex_id" => 24}
-    @pokemon = Pokemon.new(traits_hash)
+    @pokemon = Pokemon.new('',24, "Pidgey", 23, 44, "Male", false, 45, 22, true, "Normal", "Flying")
     # This setup will automatically be run before each test below.
   end
 

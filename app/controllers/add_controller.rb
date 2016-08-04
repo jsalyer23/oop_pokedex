@@ -16,7 +16,6 @@ MyApp.get "/view" do
 		@api_species = @api.species_request(@api_data)
 		# Use for evolutions
 		@api_evolution	= @api.evolution_request(@api_species, params[:name].downcase)
-
 		@types_ids = @api_data.get_type_id
 		if params[:favorite] == "on"
 			@favorite = true

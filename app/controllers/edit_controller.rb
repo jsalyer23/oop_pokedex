@@ -4,12 +4,6 @@ MyApp.get "/edit" do
 end
 
 MyApp.get "/view/:id/:name" do
-
-	if @favorite == "on"
-		@favorite = true
-	else
-		@favorite = false
-	end
 	# Update the selected Pokemon's information in the database
 	Pokemon.update(params[:hp], params[:cp], params[:gender], params[:favorite], params[:id])
 	# Search for the Pokemon by name

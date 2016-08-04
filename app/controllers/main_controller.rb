@@ -12,10 +12,6 @@ MyApp.get "/" do
 		@type1 = @existing.type_names[0]["name"]
 		@type2 = ""
 	end
-	
-	if @favorite == "true"
-		@favorite = "yes"
-	end
 
 	erb :"pokedex/home"
 end
