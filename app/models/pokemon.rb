@@ -11,6 +11,7 @@ require_relative "database_orm.rb"
 class Pokemon
 	attr_reader :id, :name, :height, :weight, :gender, :type1, :type2, :cp, :hp, :favorite, :pokedex_id, :evolves
 	attr_writer :id, :name, :height, :weight, :gender, :type1, :type2, :cp, :hp, :favorite, :pokedex_id, :evolves
+	
 	# name, cp, hp, favorite, and gender are entered by the user
 	#
 	# height, weight, stages, and types come from the API request
