@@ -23,3 +23,27 @@ binding.pry
 9, 'Blastoise', 16, 855, 'Male', false, 93, 485, CURRENT_DATE, false, 3, ''
 37, 'Vulpix', 6, 99, 'Female', true, 499, 89, CURRENT_DATE, true, 2, ''
 74, 'Geodude', 4, 200, 'Male', true, 100, 23, CURRENT_DATE, true, 9, 13
+
+
+evolution_id  stage1      stage2      stage3
+------------  ----------  ----------  ----------
+5             weedle      kakuna      beedrill
+3             squirtle    wartortle   blastoise
+18            oddish      gloom       vileplume
+10            pichu       pikachu     raichu
+2             charmander  charmeleon  charizard
+29            bellsprout  weepinbell  victreebel
+1             bulbasaur   ivysaur     venusaur
+15            vulpix      ninetales
+76            dratini     dragonair   dragonite
+67            eevee       vaporeon
+25            growlithe   arcanine
+7             rattata     raticate
+4             caterpie    metapod     butterfree
+31            geodude     graveler    golem
+40            gastly      haunter     gengar
+72            munchlax    snorlax
+27            abra        kadabra     alakazam
+21            diglett     dugtrio
+6             pidgey      pidgeotto   pidgeot
+

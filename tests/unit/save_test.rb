@@ -5,19 +5,19 @@ class PokemonSaveTest < Minitest::Test
   def setup
     super
     DATABASE.execute("DELETE FROM pokemon;")
-
-    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, height, weight, gender, favorite, hp, cp, date_added, evolves, type1, type2)
-     VALUES (7, 'Squirtle', 5, 90, 'Male', 'true', 398, 39, CURRENT_DATE, 'true', 3, ''),
-    (43, 'Oddish', 5, 54, 'Female', 'false', 100, 34, CURRENT_DATE, 'true', 5, 8),
-    (25, 'Pikachu', 4, 60, 'Female', 'true', 99, 58, CURRENT_DATE, 'true', 4, ''),
-    (9, 'Blastoise', 16, 855, 'Male', 'false', 93, 485, CURRENT_DATE, 'false', 3, ''),
-    (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, '');")
+    DATABASE.execute("DELETE FROM evolutions;")
+    DATABASE.execute("INSERT INTO evolutions (evolution_id, stage1, stage2, stage3) VALUES (3, 'squirtle', 'wartortle', 'blastoise');")
+    DATABASE.execute("INSERT INTO pokemon (pokedex_id, name, height, weight, gender, favorite, hp, cp, date_added, evolves, type1, type2, evolution_id)
+     VALUES (7, 'Squirtle', 5, 90, 'Male', 'true', 398, 39, CURRENT_DATE, 'true', 3, '', 3),
+    (43, 'Oddish', 5, 54, 'Female', 'false', 100, 34, CURRENT_DATE, 'true', 5, 8, ''),
+    (25, 'Pikachu', 4, 60, 'Female', 'true', 99, 58, CURRENT_DATE, 'true', 4, '', ''),
+    (9, 'Blastoise', 16, 855, 'Male', 'false', 93, 485, CURRENT_DATE, 'false', 3, '', 3),
+    (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, '', '');")
     
     pokehash = {"id" => "", "name" => "Geodude", "height" => 4, "weight" => 200, "gender" => "Male", "cp" => 221, "hp" => 45,
-    "favorite" => true, "evolves" => true, "type1" => 9, "type2" => 13, "pokedex_id" => 74}
+    "favorite" => true, "evolves" => true, "type1" => 9, "type2" => 13, "pokedex_id" => 74, "evolution_id" => ''}
 
-
-    @pokemon = Pokemon.new('', 74, "Geodude", 4, 200, "Male", true, 45, 221, true, 9, 13)
+    @pokemon = Pokemon.new(pokehash)
     @pokedex = Pokemon.save(@pokemon)
   end
 
@@ -25,7 +25,7 @@ class PokemonSaveTest < Minitest::Test
   # that begins with test_ or it won't work. An example test:
 
   def test_for_saved_pokemon
-    @geodude = Pokedex.find(6)
+    @geodude = Pokedex.find({"id" => 6})
 
     assert_kind_of(Object, @geodude)
     refute_nil(@geodude)
@@ -34,8 +34,8 @@ class PokemonSaveTest < Minitest::Test
 
   def test_updating_pokemon
     update_hash = {"cp" => 100, "hp" => 23, "gender" => 'Male', "favorite" => true, "id" => 6}
-  	Pokemon.update(100, 23, 'Male', true, 6)
-  	new_geodude = Pokedex.find(6)
+  	Pokemon.update(update_hash)
+  	new_geodude = Pokedex.find({"id" => 6})
 
   	refute_nil(new_geodude)
   	assert_kind_of(Object, new_geodude)

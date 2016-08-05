@@ -24,7 +24,7 @@ class PokedexTest < Minitest::Test
 
   def test_all_pokemon
     pokedex_pokemon = Pokedex.all_pokemon
-binding.pry
+
     assert_kind_of(Array, pokedex_pokemon)
     assert_kind_of(Object, pokedex_pokemon[0])
     assert_equal(pokedex_pokemon.count, 6)
@@ -47,7 +47,7 @@ binding.pry
   end
 
   def test_search_database_for_gender
-  	gender_results = Pokedex.search({"gender" => "Female"})
+  	gender_results = Pokedex.search({"search" => "Female"})
 
   	assert_kind_of(Array, gender_results)
     assert_kind_of(Object, gender_results[0])

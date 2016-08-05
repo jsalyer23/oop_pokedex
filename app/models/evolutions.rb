@@ -6,11 +6,14 @@ require_relative "database_orm.rb"
 
 # This class formats and saves evolution data to the database
 class Evolutions < PokeapiEvolutions
+
+	# extend ClassMethods
 	attr_reader :id, :evolution_id, :stage1, :stage2, :stage3
 	attr_writer :id, :evolution_id, :stage1, :stage2, :stage3
-	COLUMNS = "evolution_id, stage1, stage2, stage3"
-	VALUES = "(\'#{evolutions.evolution_id}\', \'#{evolutions.stage1}\', \'#{evolutions.stage2}\', \'#{evolutions.stage3}\')"
-
+	COLUMNS = "evolutions (evolution_id, stage1, stage2, stage3)"
+	
+	TABLE = "evolutions"
+	SELECTOR = "evolution_id"
 	def initialize(id=nil, evolution_id=nil, stage1=nil, stage2=nil, stage3=nil)
 		@id = id
 		@evolution_id = evolution_id
@@ -41,7 +44,7 @@ class Evolutions < PokeapiEvolutions
 	def chain_exists?
 		evolution_table = DATABASE.execute("SELECT evolution_id FROM evolutions;")
 		evolution_table.each do |row|
-			if row["evolution_id"] == @id.to_i
+			if row["evolution_id"] == @evolution_id.to_i
 				return true
 			end
 		end
@@ -54,9 +57,9 @@ class Evolutions < PokeapiEvolutions
 	#
 	# RETURNS ASSOCIATIVE ARRAY
 	def self.evolution_chain(id)
-		evolution_chains = DATABASE.execute("SELECT * FROM evolutions WHERE evolution_id='#{id}';")
+		evolution_chains = DATABASE.execute("SELECT * FROM #{TABLE} WHERE #{SELECTOR}='#{id}';")
 		evolutions = evolution_chains[0]
-		binding.pry
+
 		Evolutions.new('', evolutions["evolution_id"], evolutions["stage1"].capitalize, evolutions["stage2"].capitalize, evolutions["stage3"].capitalize)
 	end
 
@@ -66,7 +69,7 @@ class Evolutions < PokeapiEvolutions
 	#
 	# SAVES TO DATABASE (EVOLUTIONS TABLE)
 	def self.save_evolution(evolutions)
-		DATABASE.execute("INSERT INTO evolutions (#{COLUMNS}) VALUES #{VALUES};")
+		DATABASE.execute("INSERT INTO #{COLUMNS} VALUES (\'#{evolutions.evolution_id}\', \'#{evolutions.stage1}\', \'#{evolutions.stage2}\', \'#{evolutions.stage3}\');")
 		evolutions.id = DATABASE.last_insert_row_id
 		return evolutions
 	end

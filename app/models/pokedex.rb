@@ -40,11 +40,11 @@ class Pokedex
 		require "sqlite3"
 		objects_array = []
 		all_pokemon = DATABASE.execute("SELECT * FROM pokemon;")
-
 		all_pokemon.each do |traits|
-			objects_array << Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
-				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
-				traits["type1"], traits["type2"], traits["evolution_id"])
+			hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
+				"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
+				"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
+			objects_array << Pokedex.new(hash)
 		end
 		return objects_array
 	end
@@ -54,16 +54,16 @@ class Pokedex
 	# RETURNS POKEMON OBJECT
 	def self.search(input)
 		object_array = []
-		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name LIKE '%#{input}%'
-			OR gender LIKE '%#{input}%' OR pokedex_id LIKE '%#{input}%';")
+		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name='#{input['search']}'
+			OR gender='#{input['search']}' OR pokedex_id='#{input['search']}';")
 		search_results.each do |traits|
+			hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
+				"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
+				"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
 
-			object_array << Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
-				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
-				traits["type1"], traits["type2"], traits["evolution_id"])
+			object_array << Pokedex.new(hash)
 		end
 		object_array
-
 	end
 
 
@@ -75,10 +75,10 @@ class Pokedex
 		name_results = DATABASE.execute("SELECT * FROM #{TABLE} WHERE #{SELECTOR} LIKE '%#{id['id']}%';")
 		if !name_results.empty?
 			traits = name_results[0]
-			Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
-				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
-				traits["type1"], traits["type2"], traits["evolution_id"])
-			binding.pry
+			hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
+				"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
+				"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
+			return Pokedex.new(hash)
 		else
 			return false
 		end
@@ -92,9 +92,10 @@ class Pokedex
 		favorites_array = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
 		object_array = []
 		favorites_array.each do |traits|
-			object_array << Pokedex.new(traits["id"], traits["pokedex_id"], traits["name"], traits["weight"], traits["height"],
-				traits["gender"], traits["favorite"], traits["hp"], traits["cp"], traits["date_added"], traits["evolves"],
-				traits["type1"], traits["type2"], traits["evolution_id"])
+			hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
+				"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
+				"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
+			object_array << Pokedex.new(hash)
 		end
 		object_array
 	end
