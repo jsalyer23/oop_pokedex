@@ -8,8 +8,7 @@ require_relative "database_orm.rb"
 
 # This class searches all Pokemon from Pokedex
 class Pokedex
-	TABLE = "pokemon"
-	SELECTOR = "id"
+
 	include InstanceMethods
 	extend ClassMethods
 	attr_accessor :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2, :evolution_id
@@ -59,6 +58,14 @@ class Pokedex
 			object_array << Pokedex.new(traits)
 		end
 		object_array
+	end
+
+	def self.table
+		"pokemon"
+	end
+
+	def self.selector
+		"id"
 	end
 
 

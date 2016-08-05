@@ -14,8 +14,8 @@ class DatabaseEvolutionsTest < Minitest::Test
     (37, 'Vulpix', 6, 99, 'Female', 'true', 499, 89, CURRENT_DATE, 'true', 2, '', ''),
     (74, 'Geodude', 4, 200, 'Male', 'true', 100, 23, CURRENT_DATE, 'true', 9, 13, '');")
 
-	@id_test = Evolutions.new('', 3)
-	@new_id_test = Evolutions.new('', 24)
+	@id_test = Evolutions.new({"evolution_id"=>3})
+	@new_id_test = Evolutions.new({"evolution_id"=>24})
     # This setup will automatically be run before each test below.
   end
 
@@ -23,108 +23,108 @@ class DatabaseEvolutionsTest < Minitest::Test
   # that begins with test_ or it won't work. An example test:
 
   def test_stage1_chain
-  	evolution_chain = Evolutions.evolution_chain(3)
+  	evolution_chain = Evolutions.find({"evolution_id"=>3})
 
   	assert_kind_of(Object, evolution_chain)
-  	assert_equal("Squirtle", evolution_chain.stage1)
+  	assert_equal("Squirtle", evolution_chain.stage1.capitalize)
   	refute_nil(evolution_chain)
   end
 
   def test_stage2_chain
-  	evolution_chain = Evolutions.evolution_chain(3)
+  	evolution_chain = Evolutions.find({"evolution_id"=>3})
 
   	assert_kind_of(Object, evolution_chain)
-  	assert_equal("Wartortle", evolution_chain.stage2)
+  	assert_equal("Wartortle", evolution_chain.stage2.capitalize)
   	refute_nil(evolution_chain)
   end
 
   def test_stage3_chain
-  	evolution_chain = Evolutions.evolution_chain(3)
+  	evolution_chain = Evolutions.find({"evolution_id"=>3})
 
   	assert_kind_of(Object, evolution_chain)
-  	assert_equal( "Blastoise", evolution_chain.stage3)
+  	assert_equal( "Blastoise", evolution_chain.stage3.capitalize)
   	refute_nil(evolution_chain)
   end
 
   def test_display_stage1_for_stage1
-  	stage1 = Evolutions.evolution_chain(3)
+  	stage1 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage1)
   	assert_kind_of(String, stage1.stage1)
   	refute_nil(stage1)
-  	assert_equal("Squirtle", stage1.stage1)
+  	assert_equal("Squirtle", stage1.stage1.capitalize)
   end
 
   def test_display_stage1_for_stage2
-  	stage1 = Evolutions.evolution_chain(3)
+  	stage1 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage1)
   	assert_kind_of(String, stage1.stage1)
   	refute_nil(stage1)
-  	assert_equal("Squirtle", stage1.stage1)
+  	assert_equal("Squirtle", stage1.stage1.capitalize)
   end
 
   def test_display_stage1_for_stage3
-  	stage1 = Evolutions.evolution_chain(3)
+  	stage1 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage1)
   	assert_kind_of(String, stage1.stage1)
   	refute_nil(stage1)
-  	assert_equal("Squirtle", stage1.stage1)
+  	assert_equal("Squirtle", stage1.stage1.capitalize)
   end
 
   def test_display_stage2_for_stage3
-  	stage2 = Evolutions.evolution_chain(3)
+  	stage2 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage2)
   	assert_kind_of(String, stage2.stage2)
   	refute_nil(stage2)
-  	assert_equal("Wartortle", stage2.stage2)
+  	assert_equal("Wartortle", stage2.stage2.capitalize)
   end
 
     def test_display_stage2_for_stage2
-  	stage2 = Evolutions.evolution_chain(3)
+  	stage2 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage2)
   	assert_kind_of(String, stage2.stage2)
   	refute_nil(stage2)
-  	assert_equal("Wartortle", stage2.stage2)
+  	assert_equal("Wartortle", stage2.stage2.capitalize)
   end
 
   def test_display_stage2_for_stage1
-  	stage2 = Evolutions.evolution_chain(3)
+  	stage2 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage2)
   	assert_kind_of(String, stage2.stage2)
   	refute_nil(stage2)
-  	assert_equal("Wartortle", stage2.stage2)
+  	assert_equal("Wartortle", stage2.stage2.capitalize)
   end
 
   def test_display_stage3_for_stage1
-  	stage3 = Evolutions.evolution_chain(3)
+  	stage3 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage3)
   	assert_kind_of(String, stage3.stage3)
   	refute_nil(stage3)
-  	assert_equal("Blastoise", stage3.stage3)
+  	assert_equal("Blastoise", stage3.stage3.capitalize)
   end
 
   def test_display_stage3_for_stage2
-  	stage3 = Evolutions.evolution_chain(3)
+  	stage3 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage3)
   	assert_kind_of(String, stage3.stage3)
   	refute_nil(stage3)
-  	assert_equal("Blastoise", stage3.stage3)
+  	assert_equal("Blastoise", stage3.stage3.capitalize)
   end
 
   def test_display_stage3_for_stage3
-  	stage3 = Evolutions.evolution_chain(3)
+  	stage3 = Evolutions.find({"evolution_id"=>3})
 
     assert_kind_of(Object, stage3)
   	assert_kind_of(String, stage3.stage3)
   	refute_nil(stage3)
-  	assert_equal("Blastoise", stage3.stage3)
+  	assert_equal("Blastoise", stage3.stage3.capitalize)
   end
 
   # def test_evolution_columns
