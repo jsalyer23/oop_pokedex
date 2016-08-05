@@ -37,8 +37,9 @@ module InstanceMethods
 end
 
 module ClassMethods
-
-		# Searches for specific name
+	TABLE = ''
+	SELECTOR = ''
+	# Searches for specific name
 	#
 	# RETURNS POKEMON OBJECT OR FALSE
 	def find(id)
@@ -52,9 +53,4 @@ module ClassMethods
 
 	end
 
-	def save_evolution(object)
-		DATABASE.execute("INSERT INTO evolutions (#{COLUMNS}) VALUES #{VALUES};")
-		object.id = DATABASE.last_insert_row_id
-		return object
-	end
 end

@@ -8,11 +8,13 @@ require_relative "database_orm.rb"
 
 # This class searches all Pokemon from Pokedex
 class Pokedex
-	include InstanceMethods
-	attr_accessor :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2, :evolution_id
-	attr_reader :input
 	TABLE = "pokemon"
 	SELECTOR = "id"
+	include InstanceMethods
+	extend ClassMethods
+	attr_accessor :id, :pokedex_id, :name, :weight, :height, :gender, :favorite, :hp, :cp, :date_added, :evolves, :type1, :type2, :evolution_id
+	attr_reader :input
+
 	# input = search input
 	# pokemon = Array of all Pokemon in database (pokedex.rb)
 	def initialize(attrs=nil)
@@ -41,10 +43,7 @@ class Pokedex
 		objects_array = []
 		all_pokemon = DATABASE.execute("SELECT * FROM pokemon;")
 		all_pokemon.each do |traits|
-			hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
-				"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
-				"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
-			objects_array << Pokedex.new(hash)
+			objects_array << Pokedex.new(traits)
 		end
 		return objects_array
 	end
@@ -57,11 +56,7 @@ class Pokedex
 		search_results = DATABASE.execute("SELECT * FROM pokemon WHERE name='#{input['search']}'
 			OR gender='#{input['search']}' OR pokedex_id='#{input['search']}';")
 		search_results.each do |traits|
-			hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
-				"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
-				"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
-
-			object_array << Pokedex.new(hash)
+			object_array << Pokedex.new(traits)
 		end
 		object_array
 	end
@@ -71,19 +66,19 @@ class Pokedex
 	# Searches for specific name
 	#
 	# RETURNS POKEMON OBJECT OR FALSE
-	def self.find(id)
-		name_results = DATABASE.execute("SELECT * FROM #{TABLE} WHERE #{SELECTOR} LIKE '%#{id['id']}%';")
-		if !name_results.empty?
-			traits = name_results[0]
-			hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
-				"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
-				"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
-			return Pokedex.new(hash)
-		else
-			return false
-		end
+	# def self.find(id)
+	# 	name_results = DATABASE.execute("SELECT * FROM #{TABLE} WHERE #{SELECTOR} LIKE '%#{id['id']}%';")
+	# 	if !name_results.empty?
+	# 		traits = name_results[0]
+	# 		# hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
+	# 		# 	"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
+	# 		# 	"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
+	# 		return Pokedex.new(traits)
+	# 	else
+	# 		return false
+	# 	end
 
-	end
+	# end
 
 	# Gets all favorited Pokemon from the database as an Array of Hashes
 	#
@@ -92,10 +87,7 @@ class Pokedex
 		favorites_array = DATABASE.execute("SELECT * FROM pokemon WHERE favorite LIKE '%true%';")
 		object_array = []
 		favorites_array.each do |traits|
-			hash = {"id"=>traits["id"], "pokedex_id"=>traits["pokedex_id"], "name"=>traits["name"], "weight"=>traits["weight"], "height"=>traits["height"],
-				"gender"=>traits["gender"], "favorite"=>traits["favorite"], "hp"=>traits["hp"], "cp"=>traits["cp"], "date_added"=>traits["date_added"], "evolves"=>traits["evolves"],
-				"type1"=>traits["type1"], "type2"=>traits["type2"], "evolution_id"=>traits["evolution_id"]}
-			object_array << Pokedex.new(hash)
+			object_array << Pokedex.new(traits)
 		end
 		object_array
 	end

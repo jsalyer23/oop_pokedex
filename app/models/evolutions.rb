@@ -6,14 +6,15 @@ require_relative "database_orm.rb"
 
 # This class formats and saves evolution data to the database
 class Evolutions < PokeapiEvolutions
-
-	# extend ClassMethods
-	attr_reader :id, :evolution_id, :stage1, :stage2, :stage3
-	attr_writer :id, :evolution_id, :stage1, :stage2, :stage3
 	COLUMNS = "evolutions (evolution_id, stage1, stage2, stage3)"
 	
 	TABLE = "evolutions"
 	SELECTOR = "evolution_id"
+	
+	extend ClassMethods
+	attr_reader :id, :evolution_id, :stage1, :stage2, :stage3
+	attr_writer :id, :evolution_id, :stage1, :stage2, :stage3
+
 	def initialize(id=nil, evolution_id=nil, stage1=nil, stage2=nil, stage3=nil)
 		@id = id
 		@evolution_id = evolution_id
@@ -21,22 +22,6 @@ class Evolutions < PokeapiEvolutions
 		@stage2 = stage2
 		@stage3 = stage3
 	end
-
-	# # This method formats the columns in the evolutions table
-	# #
-	# # RETURNS STRING
-	# def evolution_columns
-	# 	columns = 
-	# 	return columns
-	# end
-
-	# # This method adds evolution chain id and stages to evoutions table
-	# #
-	# # RETURNS STRING
-	# def evolution_values
-	# 	values = 
-	# 	return values
-	# end
 
 	# This method checks if a new Pokemon's evolution chain exists in the database
 	#
@@ -56,12 +41,11 @@ class Evolutions < PokeapiEvolutions
 	# 
 	#
 	# RETURNS ASSOCIATIVE ARRAY
-	def self.evolution_chain(id)
-		evolution_chains = DATABASE.execute("SELECT * FROM #{TABLE} WHERE #{SELECTOR}='#{id}';")
-		evolutions = evolution_chains[0]
-
-		Evolutions.new('', evolutions["evolution_id"], evolutions["stage1"].capitalize, evolutions["stage2"].capitalize, evolutions["stage3"].capitalize)
-	end
+	# def self.evolution_chain(id)
+	# 	evolution_chains = DATABASE.execute("SELECT * FROM #{TABLE} WHERE #{SELECTOR}='#{id}';")
+	# 	evolutions = evolution_chains[0]
+	# 	Evolutions.new(evolutions)
+	# end
 
 	# This method saves evolution data to the evolutions table in database
 	#
