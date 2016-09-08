@@ -45,7 +45,6 @@ module ClassMethods
 		name_results = DATABASE.execute("SELECT * FROM #{self.table} WHERE #{self.selector}='#{id[self.selector]}';")
 		if !name_results.empty?
 			traits = name_results[0]
-
 			self.new(traits)
 		else
 			return false
