@@ -29,7 +29,10 @@ MyApp.get "/view" do
 		@new_pokemon = Pokemon.new(@pokemon_traits)
 		# Save new Pokemon to database
 		@pokemon = Pokemon.save(@new_pokemon)
-		@new_evolutions = Evolutions.new('', @pokemon.evolution_id, @api_evolution.stage1, @api_evolution.stage2, @api_evolution.stage3)
+		@evolution_traits = {"id"=>'', "evolution_id"=>@pokemon.evolution_id, "stage1"=>@api_evolution.stage1, "stage2"=>@api_evolution.stage2,
+						"stage3"=>@api_evolution.stage3}
+		@new_evolutions = Evolutions.new(@evolution_traits)
+
 		if !@new_evolutions.chain_exists?
 		# Save Pokemon's evolution chain to database unless the chain exists in the database already
 			@evolutions = Evolutions.save_evolution(@new_evolutions)

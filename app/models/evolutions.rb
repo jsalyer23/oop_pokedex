@@ -12,10 +12,9 @@ class Evolutions < PokeapiEvolutions
 	# SELECTOR = "evolution_id"
 	
 	extend ClassMethods
-	attr_reader :id, :evolution_id, :stage1, :stage2, :stage3
-	attr_writer :id, :evolution_id, :stage1, :stage2, :stage3
+	attr_accessor :id, :evolution_id, :stage1, :stage2, :stage3
 
-	def initialize(attrs=nil)
+	def initialize(attrs)
 		@id = attrs["id"]
 		@evolution_id = attrs["evolution_id"]
 		@stage1 = attrs["stage1"]
@@ -63,7 +62,6 @@ class Evolutions < PokeapiEvolutions
 	def self.save_evolution(evolutions)
 		DATABASE.execute("INSERT INTO #{COLUMNS} VALUES (\'#{evolutions.evolution_id}\', \'#{evolutions.stage1}\', \'#{evolutions.stage2}\', \'#{evolutions.stage3}\');")
 		evolutions.id = DATABASE.last_insert_row_id
-		binding.pry
 		return evolutions
 	end
 end
